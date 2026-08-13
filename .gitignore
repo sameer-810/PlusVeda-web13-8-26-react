@@ -1,0 +1,10 @@
+node_modules
+dist
+*.local
+
+# Build artefacts
+*.tsbuildinfo
+
+# Never commit credentials. tools/ reads REVIEWER_PASSWORD from the environment.
+.env
+.env.*

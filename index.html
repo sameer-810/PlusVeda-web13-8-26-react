@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--
+      Every tag below is static on purpose. This is a React SPA, so anything
+      rendered by JS is invisible to the crawlers and preview-scrapers that
+      don't run it — WhatsApp's link preview above all, which is how a chemist
+      will actually receive this page.
+    -->
+    <title>Plusveda — GST billing & batch-wise stock software for medical stores</title>
+    <meta
+      name="description"
+      content="Plusveda is billing and stock software for Indian medical stores. Scan the pack, sell the nearest-expiry batch first, and stop writing off expired stock. Free to start."
+    />
+    <link rel="canonical" href="https://plusveda.app/" />
+    <meta name="theme-color" content="#10A058" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Plusveda" />
+    <meta
+      property="og:title"
+      content="Bill in seconds. Never sell an expired strip."
+    />
+    <meta
+      property="og:description"
+      content="GST billing and batch-wise stock software for Indian medical stores. Over two lakh medicines pre-loaded."
+    />
+    <meta property="og:image" content="/shots/pos.png" />
+    <meta property="og:locale" content="en_IN" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" type="image/png" href="/icon.png" />
+
+    <!-- Poppins for headings, Inter for body — the app's two faces. preconnect
+         first so the font request doesn't wait on a fresh DNS+TLS handshake. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Plex Mono carries every figure, label and section number on the page.
+         It is the reason the design reads as a pharmacy register rather than a
+         SaaS template, so it is not decoration and it is not optional. -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- The hero image is the Largest Contentful Paint on every viewport, so it
+         is fetched before the JS that would otherwise discover it. Each is
+         media-gated: a phone must not spend its data on the 1440px desktop
+         screenshot it will never be shown. -->
+    <link
+      rel="preload"
+      as="image"
+      href="/shots/pos.png"
+      media="(min-width: 641px)"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/shots/phone/pos.png"
+      media="(max-width: 640px)"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Plusveda",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Android, Windows, Web",
+        "description": "GST billing and batch-wise stock software for Indian medical stores and pharmacies.",
+        "url": "https://plusveda.app/",
+        "author": {
+          "@type": "Organization",
+          "name": "FiveM Infotech"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
