@@ -117,10 +117,8 @@ const LEDGER = [
     figure: "CGST · SGST · IGST",
     text: "worked out per line, in-state or out, on every bill",
   },
-  {
-    figure: "3 screens, 1 shelf",
-    text: "counter PC, the owner's phone and any browser see the same stock",
-  },
+  // "counter PC, phone and browser" lived here too — the hero's own note says
+  // it 300px earlier, so it was the same fact twice before the first scroll.
 ];
 
 const LOSSES = [
@@ -202,10 +200,52 @@ const FEATURES = [
   },
 ];
 
-const SCANBILL_POINTS = [
-  "Product, batch, expiry, quantity, rate, MRP, discount and GST read off the page",
-  "The goods-received note is laid out like the bill, so you can match it line by line",
-  "Correct anything it misread before a single unit reaches your stock",
+/**
+ * Deliberately framed as questions about a workflow, not as claims about named
+ * competitors. Every "Usually" line describes the common way of doing the job,
+ * which a chemist can verify against their own software in a minute — and
+ * which cannot go stale or become a claim we have to defend when a rival ships
+ * an update.
+ */
+const COMPARISONS = [
+  {
+    q: "How does a purchase bill get in?",
+    usual:
+      "Typed line by line, or imported only if that particular distributor sends you a digital file.",
+    ours:
+      "Photograph the paper bill. It reads every line — which works with the small distributor who only ever gives you paper.",
+  },
+  {
+    q: "Which batch gets sold?",
+    usual:
+      "Whichever the counter picks, with an alert if someone remembers to look at it.",
+    ours:
+      "Nearest expiry, chosen automatically on every line, with the batch and its date on screen while you bill.",
+  },
+  {
+    q: "What happens when you're out of stock?",
+    usual: "You tell the customer to try somewhere else.",
+    ours:
+      "Same-salt substitutes already on your shelf, in one tap — and the medicine goes onto the reorder list at the same time.",
+  },
+  {
+    q: "Where does the reorder list come from?",
+    usual:
+      "A minimum quantity someone typed in once when the product was created.",
+    ours:
+      "What you actually sold, plus anything a customer asked for and you couldn't fill — added in one tap at the counter.",
+  },
+  {
+    q: "What does the counter assistant see?",
+    usual: "Everything, or a role you can't change without calling support.",
+    ours:
+      "Exactly what you choose, per person, and an audit trail of who did what.",
+  },
+  {
+    q: "What does it cost to start?",
+    usual: "An annual plan, paid up front, before you have entered one bill.",
+    ours: "Nothing. Sign up, enter your stock, and see whether it suits you.",
+  },
 ];
 
 const FAQS = [
@@ -284,17 +324,25 @@ export default function App() {
 
       <section className="hero">
         <div className="wrap hero-grid">
+          {/*
+            The headline leads with the purchase bill, not with billing speed.
+            "Bill in seconds" is what Marg, eVitalRx, Vyapar and myBillBook all
+            say — it is the price of entry in this category, so saying it
+            louder wins nothing. Reading a photographed paper invoice is the
+            thing none of them puts on their own marketing page, and it is the
+            job a chemist actually dreads.
+          */}
           <div>
             <p className="label">For medical stores in India</p>
             <h1>
-              Bill in seconds.
+              Stop typing purchase bills.
               <br />
-              Never sell an <span className="accent">expired strip</span>.
+              <span className="accent">Photograph them.</span>
             </h1>
             <p className="hero-sub">
-              Plusveda is GST billing and batch-wise stock software for your
-              medical store. Scan the pack — the nearest-expiry batch is picked,
-              priced and taxed for you.
+              Plusveda reads your distributor's invoice — every line, with
+              batch, expiry, MRP, rate and GST — and turns it into stock you can
+              sell. Then it bills, watches expiry and writes your reorder list.
             </p>
             <Cta note="Free to start · no card needed · browser, Android and the counter PC" />
           </div>
@@ -319,6 +367,87 @@ export default function App() {
         </div>
       </section>
 
+      {/*
+        The differentiator, given its own section high on the page.
+
+        Every number here was measured, not written: three real distributor
+        invoices photographed on a phone and run through the live app. They came
+        back in 10s, 18s and about 66s. The page says "under a minute" and shows
+        the spread rather than quoting the 10-second run, because the client
+        will demo this in front of a chemist and a cherry-picked number gets
+        found out in the first meeting.
+      */}
+      <section className="section section-sunken" id="scan">
+        <div className="wrap">
+          <div className="section-head">
+            <div>
+              <p className="label">The part nobody else automates</p>
+              <h2>Photograph the bill. It types itself.</h2>
+            </div>
+            <div>
+              <p>
+                Entering a distributor's invoice by hand is the longest job of
+                the week, and the one that puts wrong batches and wrong expiry
+                dates into your stock. Take a picture of it instead.
+              </p>
+            </div>
+          </div>
+
+          {/* A flow, not another STEP 01/02/03 block — "Getting started" lower
+              down already uses that treatment, and running it twice on one
+              page makes both look like filler. */}
+          <div className="flow">
+            <div className="flow-item">
+              <span className="flow-n">Photograph</span>
+              <p>
+                Phone camera, gallery or a PDF. Sideways and upside-down photos
+                are fine.
+              </p>
+            </div>
+            <div className="flow-item">
+              <span className="flow-n">It reads every line</span>
+              <p>
+                Product, batch, expiry, quantity, rate, MRP, discount and GST —
+                plus supplier, invoice number and date off the header.
+              </p>
+            </div>
+            <div className="flow-item">
+              <span className="flow-n">You confirm</span>
+              <p>
+                Anything it isn't sure of is flagged for checking. Nothing
+                reaches your stock until you say so.
+              </p>
+            </div>
+          </div>
+
+          <div className="ledger-grid scan-figures">
+            <div className="ledger-cell">
+              <strong>Under a minute</strong>
+              <span>
+                three real distributor bills, photographed on a phone: 10s, 18s
+                and 66s from picture to a checked draft
+              </span>
+            </div>
+            <div className="ledger-cell">
+              <strong>11 lines</strong>
+              <span>
+                read off one of them — with the batch and expiry on every line,
+                not just the totals
+              </span>
+            </div>
+            {/* No fourth "you confirm" cell — the flow above already ends on
+                it, and saying it twice in 300px is padding. */}
+            <div className="ledger-cell">
+              <strong>Upside down</strong>
+              <span>
+                one of the three was photographed the wrong way up on a shop
+                counter. It read it anyway
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="section" id="losses">
         <div className="wrap">
           <div className="section-head">
@@ -336,20 +465,22 @@ export default function App() {
 
           <div className="losses">
             {LOSSES.map((l, i) => (
-              <article className="loss" key={l.title}>
-                <div className="loss-n">
-                  {String(i + 1).padStart(2, "0")}
-                </div>
-                <div>
-                  <span className="loss-tag">{l.tag}</span>
-                  <h3>{l.title}</h3>
-                  <p className="loss-what">{l.what}</p>
-                </div>
+              <details className="loss" key={l.title} open={!phone}>
+                <summary>
+                  <span className="loss-n">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span>
+                    <span className="loss-tag">{l.tag}</span>
+                    <h3>{l.title}</h3>
+                  </span>
+                </summary>
+                <p className="loss-what">{l.what}</p>
                 <div className="loss-fix">
                   <span className="label-plain">With Plusveda</span>
                   {l.fix}
                 </div>
-              </article>
+              </details>
             ))}
           </div>
         </div>
@@ -412,37 +543,48 @@ export default function App() {
       </section>
 
       {/*
-        Scan Bill is reached from Receive Stock rather than the sidebar, so it
-        is the one capability the hero preview cannot show you — hence its own
-        section.
-        It has NO screenshot, deliberately. The screen only means anything with
-        a bill on it, and every bill available to shoot is a real distributor's
-        invoice carrying their GSTIN, their bank details and a named pharmacy's
-        purchases. Publishing somebody else's paperwork to sell software is not
-        a trade worth making. The empty screen proves nothing, so it says so in
-        words instead — see README before adding a picture here.
+        What a chemist is comparing us against.
+
+        Nothing here names a competitor or asserts what their software does —
+        that is a claim we would have to defend, and product pages go stale. It
+        describes the WORKFLOWS instead, which a chemist can check against
+        whatever they are using today in about a minute.
       */}
-      <section className="section" id="scan">
+      <section className="section" id="different">
         <div className="wrap">
-          <div className="feature-copy">
+          <div className="section-head">
             <div>
-              <p className="label">Not in the preview</p>
-              <h3>Photograph the distributor's bill</h3>
+              <p className="label">Worth comparing</p>
+              <h2>Check these against what you use today</h2>
+            </div>
+            <div>
               <p>
-                The slowest hour of the week is typing a purchase bill back in.
-                Take a picture of it instead and check what Plusveda read. It
-                opens from Receive Stock, so it is the one screen you can't
-                click to at the top of this page.
+                Not a feature list — the handful of things that decide whether
+                software saves you an hour or costs you one. Ask your current
+                vendor about each.
               </p>
             </div>
-            <ul>
-              {SCANBILL_POINTS.map((pt) => (
-                <li key={pt}>
-                  <i aria-hidden="true">—</i>
-                  <span>{pt}</span>
-                </li>
-              ))}
-            </ul>
+          </div>
+
+          {/* Folded on a phone, laid out in three columns on a desktop — the
+              same trick the spec sheet uses, for the same reason: six of these
+              flat is most of a phone screen each. */}
+          <div className="compare">
+            {COMPARISONS.map((c) => (
+              <details className="compare-row" key={c.q} open={!phone}>
+                <summary>
+                  <h3>{c.q}</h3>
+                </summary>
+                <p className="compare-usual">
+                  <span className="label-plain">Usually</span>
+                  {c.usual}
+                </p>
+                <p className="compare-ours">
+                  <span className="label-plain">Plusveda</span>
+                  {c.ours}
+                </p>
+              </details>
+            ))}
           </div>
         </div>
       </section>

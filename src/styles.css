@@ -530,6 +530,18 @@ img {
   align-items: start;
 }
 
+/* Open on a desktop. The summary carries the number and the title into the
+   first two columns and then gets out of the way. */
+.loss > summary {
+  display: contents;
+  list-style: none;
+  cursor: default;
+}
+
+.loss > summary::-webkit-details-marker {
+  display: none;
+}
+
 .loss:last-child {
   border-bottom: 1px solid var(--rule);
 }
@@ -727,6 +739,101 @@ img {
   font-size: 13px;
   color: var(--brand-600);
   padding-top: 2px;
+}
+
+/* ---- Comparison ---------------------------------------------------------
+   Three ruled columns: the question, the usual answer, ours. No competitor is
+   named and no claim is made about anyone's product — the left column is the
+   common way of doing the job, which the reader can check for themselves. */
+
+.compare-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 40px;
+  padding: 26px 0;
+  border-top: 1px solid var(--rule);
+  align-items: start;
+}
+
+/* Open on a desktop: the summary is a plain heading in the first column, with
+   no marker and nothing to click. */
+.compare-row > summary {
+  list-style: none;
+  cursor: default;
+}
+
+.compare-row > summary::-webkit-details-marker {
+  display: none;
+}
+
+.compare-row:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.compare-row h3 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.compare-row p {
+  font-size: 15.5px;
+}
+
+.compare-row .label-plain {
+  display: block;
+  margin-bottom: 7px;
+}
+
+.compare-usual {
+  color: var(--text-tertiary);
+}
+
+.compare-ours {
+  color: var(--text-primary);
+  border-left: 2px solid var(--brand-600);
+  padding-left: 18px;
+}
+
+.compare-ours .label-plain {
+  color: var(--brand-700);
+}
+
+/* ---- The scan flow ------------------------------------------------------ */
+
+.flow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 34px;
+}
+
+.flow-item {
+  border-top: 1px solid var(--rule-strong);
+  padding-top: 16px;
+}
+
+.flow-n {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--brand-700);
+  margin-bottom: 9px;
+}
+
+.flow-item p {
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+/* The measured figures under the scan story. */
+.scan-figures {
+  margin-top: 46px;
+  border-top: 1px solid var(--rule);
+}
+
+.scan-figures .ledger-cell strong {
+  font-size: 18px;
 }
 
 /* ---- Steps --------------------------------------------------------------- */
@@ -1082,9 +1189,99 @@ img {
     padding-bottom: 18px;
   }
 
+  /* Folded. The three titles then fit one screen — and those titles are the
+     argument, so the pain still lands even unopened. */
   .loss {
-    grid-template-columns: 40px minmax(0, 1fr);
-    gap: 20px;
+    display: block;
+    padding: 0;
+  }
+
+  .loss > summary {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr) 24px;
+    gap: 12px;
+    align-items: center;
+    cursor: pointer;
+    padding: 16px 0;
+  }
+
+  .loss > summary::after {
+    content: "+";
+    font-family: var(--font-mono);
+    font-size: 18px;
+    color: var(--brand-600);
+    text-align: right;
+  }
+
+  .loss[open] > summary::after {
+    content: "–";
+  }
+
+  .loss-n {
+    padding-top: 0;
+  }
+
+  .loss h3 {
+    font-size: 17px;
+  }
+
+  .loss-what {
+    margin-top: 0;
+    margin-bottom: 14px;
+  }
+
+  .loss-fix {
+    margin-bottom: 16px;
+  }
+
+  .flow {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .flow-item {
+    padding: 16px 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .flow-item:first-child {
+    border-top: 1px solid var(--rule-strong);
+  }
+
+  /* Folded: the question is a tappable row, the two answers open under it. */
+  .compare-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 0;
+  }
+
+  .compare-row > summary {
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 24px;
+    align-items: center;
+    gap: 16px;
+    padding: 17px 0;
+  }
+
+  .compare-row > summary::after {
+    content: "+";
+    font-family: var(--font-mono);
+    font-size: 18px;
+    color: var(--brand-600);
+    text-align: right;
+  }
+
+  .compare-row[open] > summary::after {
+    content: "–";
+  }
+
+  .compare-row > p {
+    margin-bottom: 14px;
+  }
+
+  .compare-row[open] {
+    padding-bottom: 4px;
   }
 
   .loss-fix {

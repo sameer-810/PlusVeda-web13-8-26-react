@@ -35,18 +35,35 @@ const SCREENS: Screen[] = [
   { id: "inventory", label: "Inventory", section: "Inventory", title: "stock on hand" },
   { id: "shortbook", label: "ShortBook", section: "Inventory", title: "shortbook" },
   { id: "expiry", label: "Expiry", section: "Inventory", title: "expiry" },
-  { id: "receive", label: "Receive Stock", section: "Purchasing", title: "receive stock" },
+  {
+    id: "receive",
+    label: "Receive Stock",
+    section: "Purchasing",
+    /* Kept short — the title bar wraps to two lines past about 40 characters
+       and drags the whole frame taller. */
+    title: "receive stock · from a photo",
+  },
   { id: "pdc", label: "Cheques / PDC", section: "Purchasing", title: "cheques · pdc" },
   // A chemist clicking "Sales" wants to see billing, not a list of past bills.
   { id: "pos", label: "Sales", section: "Sales", title: "new sale" },
   { id: "reports", label: "Reports", section: "Insights", title: "reports" },
 ];
 
-/** Starts on billing — it is the screen the whole market is won on. */
-const START = "pos";
+/**
+ * Opens on the goods-received screen filled in from a photographed bill,
+ * because that is what the headline above it promises. It used to open on
+ * billing, which meant the page said "photograph your purchase bills" beside a
+ * picture of the till — the strongest claim on the page and a picture of
+ * something else.
+ *
+ * That screenshot is cropped to start below the supplier name, invoice number
+ * and date. What is left is generic medicines with their batch, expiry and MRP,
+ * which identifies nobody. See tools/captureProductShots.mjs.
+ */
+const START = "receive";
 
 /** What the idle rotation walks through. Not every screen; the showpieces. */
-const ROTATION = ["pos", "shortbook", "expiry", "dashboard", "reports"];
+const ROTATION = ["receive", "pos", "shortbook", "expiry", "reports"];
 
 const ROTATE_MS = 5200;
 

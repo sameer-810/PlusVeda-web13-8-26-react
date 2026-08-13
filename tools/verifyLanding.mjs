@@ -325,11 +325,25 @@ rec(
 await page.evaluate(() => window.scrollTo(0, 0));
 await page.waitForTimeout(400);
 
+/**
+ * Ceiling raised from 10 screens to 11, deliberately and once.
+ *
+ * The page gained the bill-scanning section and the comparison block, which
+ * are the two things that actually differentiate it. Ten screens was a round
+ * number I picked, not a finding, and hitting it would have meant deleting
+ * argument rather than deleting padding. What kept the guard meaningful
+ * instead: the losses, specs, comparison and FAQ blocks are all folded on a
+ * phone, so this 11 screens is mostly headings — the flat version of the same
+ * content ran to 13.
+ *
+ * If this needs raising a second time, that is the signal to cut a section,
+ * not the ceiling.
+ */
 const phoneHeight = await page.evaluate(() => document.body.scrollHeight);
 rec(
-  "Phone page stays under 10 screens",
-  phoneHeight <= 8440,
-  `${phoneHeight}px ≈ ${(phoneHeight / 844).toFixed(1)} screens`,
+  "Phone page stays under 11 screens",
+  phoneHeight <= 9284,
+  `${phoneHeight}px ≈ ${(phoneHeight / 844).toFixed(1)} screens (long blocks fold)`,
 );
 
 await page.screenshot({ path: path.join(OUT, "phone-fold.png") });
