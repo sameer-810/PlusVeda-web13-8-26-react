@@ -59,7 +59,10 @@
 
   --page: 1180px;
 
-  --font-head: "Poppins", "Segoe UI", system-ui, sans-serif;
+  /* One grotesque, matching the app. Poppins came off both sides together —
+     a geometric display face beside data type is the clearest "consumer app"
+     tell there is, and the product it is advertising no longer uses it. */
+  --font-head: "Inter", "Segoe UI", system-ui, sans-serif;
   --font-body: "Inter", "Segoe UI", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", monospace;
 }
@@ -135,15 +138,6 @@ img {
   height: 1px;
   background: var(--brand-600);
   flex: none;
-}
-
-.label-plain {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--text-tertiary);
 }
 
 /* ---- Buttons ------------------------------------------------------------
@@ -308,134 +302,6 @@ img {
   color: var(--text-tertiary);
 }
 
-/* Wider than its column on purpose — the right edge runs off the page, which
-   keeps the app big enough to read and stops the hero reading as a template. */
-.hero-shot {
-  position: relative;
-  margin-bottom: -1px;
-}
-
-/* ---- The navigable preview ---------------------------------------------
-   Sidebar chrome redrawn to match the app's own; the panel is a photograph.
-   See ScreenPreview.tsx for why that split is deliberate. */
-
-.preview {
-  border: 1px solid var(--rule);
-  border-bottom: 0;
-  border-right: 0;
-  border-radius: var(--radius-lg) 0 0 0;
-  overflow: hidden;
-  background: var(--surface);
-  /* Overhangs its column so the right edge runs off the page. 132% is the
-     balance point: enough overhang to read as deliberate, little enough that
-     the totals panel — the punchline of the billing screen — stays on screen
-     at 1440. */
-  width: 132%;
-  box-shadow: -18px 18px 44px rgba(23, 36, 45, 0.09);
-}
-
-.preview-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 14px;
-  background: var(--ink-50);
-  border-bottom: 1px solid var(--rule);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.05em;
-  color: var(--text-tertiary);
-}
-
-.preview-bar .dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--rule-strong);
-  flex: none;
-}
-
-.preview-route {
-  margin-left: 4px;
-}
-
-/* Says what to do without a pulsing badge asking for attention. */
-/* Pulled left of the frame's true centre so it stays on screen despite the
-   overhang — the instruction is useless if it sits past the viewport edge. */
-.preview-hint {
-  margin-left: auto;
-  padding-right: 34%;
-  color: var(--brand-700);
-  white-space: nowrap;
-}
-
-.preview-body {
-  display: grid;
-  grid-template-columns: 168px minmax(0, 1fr);
-}
-
-.preview-nav {
-  border-right: 1px solid var(--rule);
-  padding: 12px 0 18px;
-  background: var(--surface);
-}
-
-.preview-section {
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: var(--text-tertiary);
-  padding: 14px 14px 6px;
-  margin: 0;
-}
-
-.preview-item {
-  display: block;
-  width: 100%;
-  text-align: left;
-  border: 0;
-  background: transparent;
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  padding: 7px 14px;
-  cursor: pointer;
-  border-left: 2px solid transparent;
-  transition:
-    background 0.12s ease,
-    color 0.12s ease;
-}
-
-.preview-item:hover {
-  background: var(--brand-50);
-  color: var(--brand-700);
-}
-
-.preview-item.is-active {
-  background: var(--brand-50);
-  border-left-color: var(--brand-600);
-  color: var(--brand-800);
-  font-weight: 600;
-}
-
-.preview-item:focus-visible {
-  outline: 2px solid var(--brand-600);
-  outline-offset: -2px;
-}
-
-.preview-screen {
-  background: var(--surface-sunken);
-  min-height: 0;
-}
-
-.preview-screen img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
 /* ---- Ledger strip -------------------------------------------------------
    Four figures ruled apart like columns in a register, not four stat cards. */
 
@@ -510,362 +376,6 @@ img {
 
 .section-head > div > p {
   font-size: 17px;
-  color: var(--text-secondary);
-}
-
-/* ---- Problems -----------------------------------------------------------
-   A numbered register of three losses, ruled apart. Not three cards. */
-
-.losses {
-  display: grid;
-  gap: 0;
-}
-
-.loss {
-  display: grid;
-  grid-template-columns: 68px minmax(0, 1fr) minmax(0, 1fr);
-  gap: 40px;
-  padding: 34px 0;
-  border-top: 1px solid var(--rule);
-  align-items: start;
-}
-
-/* Open on a desktop. The summary carries the number and the title into the
-   first two columns and then gets out of the way. */
-.loss > summary {
-  display: contents;
-  list-style: none;
-  cursor: default;
-}
-
-.loss > summary::-webkit-details-marker {
-  display: none;
-}
-
-.loss:last-child {
-  border-bottom: 1px solid var(--rule);
-}
-
-.loss-n {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--rule-strong);
-  letter-spacing: 0.06em;
-  padding-top: 5px;
-}
-
-.loss h3 {
-  font-size: 21px;
-  font-weight: 600;
-}
-
-.loss-what {
-  margin-top: 12px;
-  font-size: 15.5px;
-  color: var(--text-secondary);
-}
-
-.loss-tag {
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--danger-text);
-  display: block;
-  margin-bottom: 10px;
-}
-
-.loss-fix {
-  border-left: 2px solid var(--brand-600);
-  padding-left: 20px;
-  font-size: 15.5px;
-  color: var(--text-primary);
-}
-
-.loss-fix .label-plain {
-  display: block;
-  margin-bottom: 8px;
-  color: var(--brand-700);
-}
-
-/* ---- Feature blocks -----------------------------------------------------
-   Copy in two text columns, screenshot full-measure underneath at ~74% scale,
-   which is the smallest size the app's own type stays readable at. */
-
-.feature {
-  padding: 54px 0;
-  border-top: 1px solid var(--rule);
-}
-
-.feature:first-of-type {
-  border-top: 0;
-  padding-top: 0;
-}
-
-.feature-copy {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 60px;
-  align-items: start;
-}
-
-.feature h3 {
-  font-size: clamp(23px, 2.4vw, 30px);
-  font-weight: 700;
-  margin-top: 16px;
-}
-
-.feature-copy > div > p {
-  margin-top: 15px;
-  font-size: 16.5px;
-  color: var(--text-secondary);
-}
-
-/* Bullets are ruled rows with a mono marker. The identical green tick beside
-   every line was the single most template-like thing on the old page. */
-.feature ul {
-  margin: 4px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.feature li {
-  display: grid;
-  grid-template-columns: 22px minmax(0, 1fr);
-  gap: 10px;
-  padding: 11px 0;
-  border-top: 1px solid var(--rule);
-  font-size: 15.5px;
-  color: var(--text-primary);
-}
-
-.feature li:first-child {
-  border-top: 0;
-  padding-top: 0;
-}
-
-.feature li i {
-  font-family: var(--font-mono);
-  font-style: normal;
-  font-size: 13px;
-  color: var(--brand-600);
-  padding-top: 2px;
-}
-
-.feature-shot {
-  margin-top: 36px;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  background: var(--surface);
-}
-
-/* ---- Spec sheet ---------------------------------------------------------
-   Two ruled columns of specifications. Replaced five full-width screenshots of
-   screens the hero preview already lets you open — the same proof twice, for
-   4,000px of scrolling. */
-
-.specs {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 60px;
-}
-
-.spec {
-  padding: 30px 0;
-  border-top: 1px solid var(--rule);
-}
-
-.specs .spec:nth-child(1),
-.specs .spec:nth-child(2) {
-  border-top: 0;
-  padding-top: 0;
-}
-
-/* An odd count leaves a gap in the second column; letting the last entry span
-   both keeps the bottom rule straight. */
-.specs .spec:last-child:nth-child(odd) {
-  grid-column: 1 / -1;
-}
-
-.specs .spec:last-child:nth-child(odd) ul {
-  columns: 2;
-  column-gap: 60px;
-}
-
-/* On a desktop these are open and the summary is just a heading — no marker,
-   no pointer, nothing to suggest there is anything to click. */
-.spec summary {
-  list-style: none;
-  cursor: default;
-}
-
-.spec summary::-webkit-details-marker {
-  display: none;
-}
-
-.spec h3 {
-  font-size: 21px;
-  font-weight: 600;
-  margin-top: 14px;
-}
-
-.spec-body {
-  margin-top: 11px;
-  font-size: 15.5px;
-  color: var(--text-secondary);
-}
-
-.spec ul {
-  margin: 16px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.spec li {
-  display: grid;
-  grid-template-columns: 20px minmax(0, 1fr);
-  gap: 9px;
-  padding: 8px 0;
-  font-size: 15px;
-  color: var(--text-primary);
-  break-inside: avoid;
-}
-
-.spec li i {
-  font-family: var(--font-mono);
-  font-style: normal;
-  font-size: 13px;
-  color: var(--brand-600);
-  padding-top: 2px;
-}
-
-/* ---- Comparison ---------------------------------------------------------
-   Three ruled columns: the question, the usual answer, ours. No competitor is
-   named and no claim is made about anyone's product — the left column is the
-   common way of doing the job, which the reader can check for themselves. */
-
-.compare-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
-  gap: 40px;
-  padding: 26px 0;
-  border-top: 1px solid var(--rule);
-  align-items: start;
-}
-
-/* Open on a desktop: the summary is a plain heading in the first column, with
-   no marker and nothing to click. */
-.compare-row > summary {
-  list-style: none;
-  cursor: default;
-}
-
-.compare-row > summary::-webkit-details-marker {
-  display: none;
-}
-
-.compare-row:last-child {
-  border-bottom: 1px solid var(--rule);
-}
-
-.compare-row h3 {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.compare-row p {
-  font-size: 15.5px;
-}
-
-.compare-row .label-plain {
-  display: block;
-  margin-bottom: 7px;
-}
-
-.compare-usual {
-  color: var(--text-tertiary);
-}
-
-.compare-ours {
-  color: var(--text-primary);
-  border-left: 2px solid var(--brand-600);
-  padding-left: 18px;
-}
-
-.compare-ours .label-plain {
-  color: var(--brand-700);
-}
-
-/* ---- The scan flow ------------------------------------------------------ */
-
-.flow {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 34px;
-}
-
-.flow-item {
-  border-top: 1px solid var(--rule-strong);
-  padding-top: 16px;
-}
-
-.flow-n {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--brand-700);
-  margin-bottom: 9px;
-}
-
-.flow-item p {
-  font-size: 15px;
-  color: var(--text-secondary);
-}
-
-/* The measured figures under the scan story. */
-.scan-figures {
-  margin-top: 46px;
-  border-top: 1px solid var(--rule);
-}
-
-.scan-figures .ledger-cell strong {
-  font-size: 18px;
-}
-
-/* ---- Steps --------------------------------------------------------------- */
-
-.steps {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 44px;
-}
-
-.step {
-  border-top: 2px solid var(--brand-600);
-  padding-top: 22px;
-}
-
-.step-n {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  color: var(--brand-700);
-}
-
-.step h3 {
-  margin-top: 14px;
-  font-size: 19px;
-  font-weight: 600;
-}
-
-.step p {
-  margin-top: 11px;
-  font-size: 15.5px;
   color: var(--text-secondary);
 }
 
@@ -1090,6 +600,124 @@ img {
 /* ---- Responsive ---------------------------------------------------------
    960 is the small laptop a counter PC often is; 640 the owner's phone. */
 
+/* ---- Figures ------------------------------------------------------------
+   Every graphic on this page is an inline SVG workflow diagram rather than a
+   product screenshot — see Illustrations.tsx for why. They scale with their
+   column, so there is no fixed height to break and nothing to art-direct at
+   each breakpoint. */
+
+.fig {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.hero-fig {
+  margin: 0;
+  /* The hero diagram is the explanation, so it gets room rather than being
+     tucked beside the copy as an ornament. */
+  padding: 8px 0 40px;
+  align-self: center;
+}
+
+/* ---- What it does -------------------------------------------------------
+   Alternating sides so the eye zig-zags down the page. A column of four
+   identical left-image cards is the template look this page exists to avoid. */
+
+.caps {
+  display: grid;
+  gap: 4px;
+  margin-top: 44px;
+  border-top: 1px solid var(--rule);
+}
+
+.cap {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
+  gap: 56px;
+  align-items: center;
+  padding: 44px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.cap:nth-child(even) .cap-fig {
+  order: 2;
+}
+
+.cap-fig {
+  margin: 0;
+  padding: 18px 22px;
+  background: var(--surface-sunken);
+  border-radius: var(--radius-lg);
+}
+
+.cap-copy h3 {
+  font-size: 25px;
+  font-weight: 700;
+  margin: 10px 0 0;
+  letter-spacing: -0.01em;
+}
+
+.cap-copy > p {
+  margin: 12px 0 0;
+  color: var(--text-secondary);
+  font-size: 16.5px;
+  max-width: 44ch;
+}
+
+/* ---- Side by side -------------------------------------------------------
+   A ruled three-column register, not a pair of pricing-style cards. The job is
+   the row label; the two answers sit beside each other so the difference is
+   read across rather than hunted for between two columns of prose. */
+
+.compare {
+  margin-top: 40px;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.compare-head,
+.compare-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: baseline;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.compare-head {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  padding: 11px 0;
+}
+
+.compare-head .is-ours {
+  color: var(--brand-700);
+  font-weight: 600;
+}
+
+.compare-q {
+  font-weight: 600;
+  font-size: 15.5px;
+}
+
+.compare-usual {
+  color: var(--text-tertiary);
+  font-size: 15px;
+}
+
+/* The only coloured text in the table, and it marks the column that is the
+   point of the table. */
+.compare-ours {
+  color: var(--brand-700);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+
 @media (max-width: 1080px) {
   .hero-grid {
     grid-template-columns: 1fr;
@@ -1125,172 +753,6 @@ img {
   .ledger-cell:nth-child(3),
   .ledger-cell:nth-child(4) {
     border-top: 1px solid var(--rule);
-  }
-
-  .section-head,
-  .letter,
-  .feature-copy,
-  .specs,
-  .close-cta-grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-
-  .specs {
-    gap: 0;
-  }
-
-  .specs .spec:last-child:nth-child(odd) ul {
-    columns: 1;
-  }
-
-  /* Folded. The summary becomes a real, tappable row with a marker. */
-  .spec {
-    padding: 0;
-    border-top: 1px solid var(--rule);
-  }
-
-  .specs .spec:nth-child(1) {
-    border-top: 0;
-  }
-
-  .spec summary {
-    cursor: pointer;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 24px;
-    align-items: center;
-    gap: 16px;
-    padding: 18px 0;
-  }
-
-  .spec summary::after {
-    content: "+";
-    font-family: var(--font-mono);
-    font-size: 18px;
-    color: var(--brand-600);
-    text-align: right;
-  }
-
-  .spec[open] summary::after {
-    content: "–";
-  }
-
-  .spec h3 {
-    font-size: 18px;
-    margin-top: 6px;
-  }
-
-  .spec-body {
-    margin-top: 0;
-  }
-
-  .spec ul {
-    margin-top: 12px;
-    padding-bottom: 18px;
-  }
-
-  /* Folded. The three titles then fit one screen — and those titles are the
-     argument, so the pain still lands even unopened. */
-  .loss {
-    display: block;
-    padding: 0;
-  }
-
-  .loss > summary {
-    display: grid;
-    grid-template-columns: 34px minmax(0, 1fr) 24px;
-    gap: 12px;
-    align-items: center;
-    cursor: pointer;
-    padding: 16px 0;
-  }
-
-  .loss > summary::after {
-    content: "+";
-    font-family: var(--font-mono);
-    font-size: 18px;
-    color: var(--brand-600);
-    text-align: right;
-  }
-
-  .loss[open] > summary::after {
-    content: "–";
-  }
-
-  .loss-n {
-    padding-top: 0;
-  }
-
-  .loss h3 {
-    font-size: 17px;
-  }
-
-  .loss-what {
-    margin-top: 0;
-    margin-bottom: 14px;
-  }
-
-  .loss-fix {
-    margin-bottom: 16px;
-  }
-
-  .flow {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-
-  .flow-item {
-    padding: 16px 0;
-    border-top: 1px solid var(--rule);
-  }
-
-  .flow-item:first-child {
-    border-top: 1px solid var(--rule-strong);
-  }
-
-  /* Folded: the question is a tappable row, the two answers open under it. */
-  .compare-row {
-    grid-template-columns: 1fr;
-    gap: 0;
-    padding: 0;
-  }
-
-  .compare-row > summary {
-    cursor: pointer;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 24px;
-    align-items: center;
-    gap: 16px;
-    padding: 17px 0;
-  }
-
-  .compare-row > summary::after {
-    content: "+";
-    font-family: var(--font-mono);
-    font-size: 18px;
-    color: var(--brand-600);
-    text-align: right;
-  }
-
-  .compare-row[open] > summary::after {
-    content: "–";
-  }
-
-  .compare-row > p {
-    margin-bottom: 14px;
-  }
-
-  .compare-row[open] {
-    padding-bottom: 4px;
-  }
-
-  .loss-fix {
-    grid-column: 2;
-  }
-
-  .steps {
-    grid-template-columns: 1fr;
-    gap: 30px;
   }
 
   .nav-links {
@@ -1548,5 +1010,49 @@ img {
 
   .btn {
     transition: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .cap {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    padding: 34px 0;
+  }
+  /* Graphic first on a phone, always: the picture is the point, and it should
+     arrive before the words rather than after them. The `order` that alternates
+     sides on a wide screen has to be reset or every other row flips. */
+  .cap:nth-child(even) .cap-fig {
+    order: 0;
+  }
+  .cap-copy h3 {
+    font-size: 21px;
+  }
+  .cap-copy > p {
+    font-size: 15.5px;
+  }
+  .hero-fig {
+    padding: 0 0 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  .compare-head {
+    display: none;
+  }
+  .compare-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 14px 0;
+  }
+  /* Without the header row the two answers need naming in place, or they are
+     just two unlabelled lines. */
+  .compare-usual::before {
+    content: "Usually — ";
+    color: var(--text-tertiary);
+  }
+  .compare-ours::before {
+    content: "Plusveda — ";
+    color: var(--brand-700);
   }
 }

@@ -1,25 +1,49 @@
 /**
- * Plusveda landing page.
+ * Plusveda landing page — graphics-led rebuild.
  *
- * The section order follows what holds up across the 2026 SaaS teardowns —
- * hero → proof → problem → features → how it works → objections → one closing
- * CTA. The DRESSING of those sections deliberately does not, because the
- * default dressing is what makes a page look machine-made. See styles.css for
- * the art direction; the short version is that a pharmacy runs on ruled
- * paperwork and batch numbers, so this page is ruled and set in mono figures
- * rather than stacked out of rounded cards.
+ * WHAT CHANGED FROM THE PREVIOUS VERSION, AND WHY
+ * ------------------------------------------------
+ * The old page was honest and well-organised and it lost on one point: it asked
+ * a shop owner to READ. Five feature blocks of five bullets each, three
+ * problem/fix essays, a founder's letter, six FAQs. The owner's verdict was
+ * that nobody reads that, and that people understand a product from pictures —
+ * and on a phone, scrolling past nine screens of prose, he is right.
  *
- * Two things are load-bearing and should not be "improved" away:
+ * He also asked for the product screenshots to come off, because publishing the
+ * whole interface hands it to whoever wants to copy it.
+ *
+ * Those two asks pull in the same direction, which is lucky, because the naive
+ * reading of them does not: "no text and no screenshots" would leave a page of
+ * decoration. What this page does instead is carry every claim on a DIAGRAM OF
+ * THE WORK — the paper bill becoming stock, the nearest-expiry lot leaving the
+ * shelf, the reorder list assembling itself at the counter. See
+ * Illustrations.tsx. A diagram is faster to read than a paragraph AND shows
+ * nothing an imitator could copy, because it depicts the job rather than the
+ * interface.
+ *
+ * Copy is cut to roughly a quarter of what it was: a headline, one sentence
+ * under it, and three-to-six words per diagram node. Everything that survived
+ * is load-bearing.
+ *
+ * THREE THINGS THAT MUST NOT BE "IMPROVED" AWAY:
  *
  * 1. No logo wall, no testimonials, no customer count. Plusveda has no live
- *    customers yet, and a chemist who finds out you invented one will tell the
- *    other chemists. The screenshots are the proof instead — every one captured
- *    from the running app by tools/captureProductShots.mjs.
+ *    customers yet, and a chemist who catches you inventing one will tell the
+ *    other chemists. The diagrams and the free trial are the proof instead.
  * 2. The secondary CTA is a person, not a form. Indian SMB software is bought
  *    after a conversation, and that conversation happens on WhatsApp.
+ * 3. The FAQ stays. It is the one place text genuinely beats a picture, because
+ *    "what happens to my bill photo" and "does it do GST properly" are trust
+ *    questions, and a diagram cannot answer them credibly.
  */
 import { useEffect, useState } from "react";
-import ScreenPreview from "./ScreenPreview";
+import {
+  FigBillToStock,
+  FigFefo,
+  FigExpiryRunway,
+  FigShortbook,
+  FigOneStock,
+} from "./Illustrations";
 import {
   contactHref,
   contactLabel,
@@ -34,12 +58,7 @@ import {
 function Brand({ className = "brand" }: { className?: string }) {
   return (
     <a className={className} href="#top" aria-label="Plusveda — home">
-      <img
-        src="/brand/wordmark.png"
-        alt="Plusveda"
-        width={720}
-        height={202}
-      />
+      <img src="/brand/wordmark.png" alt="Plusveda" width={720} height={202} />
     </a>
   );
 }
@@ -47,14 +66,10 @@ function Brand({ className = "brand" }: { className?: string }) {
 /**
  * Sticky action bar, phones only.
  *
- * This page is read on a phone by roughly four visitors in five, and it is
- * several screens long. Without this, everything past the hero has no way to
- * convert until the footer — the reader has to scroll back up to act on the
- * moment they decided. A sticky bar is worth about 14% on scrolling pages, and
- * it costs nothing but a fixed strip at the bottom of the glass.
- *
- * It stays out of the way until the hero's own buttons have gone, so the two
- * are never on screen competing.
+ * Four visitors in five read this on a phone and the page is several screens
+ * long. Without this, everything past the hero has no way to convert until the
+ * footer. It stays out of the way until the hero's own buttons have scrolled
+ * off, so the two are never on screen competing.
  */
 function StickyBar() {
   const [show, setShow] = useState(false);
@@ -72,11 +87,7 @@ function StickyBar() {
 
   return (
     <div className={`sticky-bar${show ? " is-up" : ""}`} aria-hidden={!show}>
-      <a
-        className="btn btn-primary"
-        href={signupHref}
-        tabIndex={show ? 0 : -1}
-      >
+      <a className="btn btn-primary" href={signupHref} tabIndex={show ? 0 : -1}>
         Start free
       </a>
       <a className="btn btn-ghost" href={contactHref()} tabIndex={show ? 0 : -1}>
@@ -104,211 +115,125 @@ function Cta({ note }: { note?: string }) {
 
 /* ---- content ------------------------------------------------------------- */
 
+/**
+ * Three facts, in figures. These are the page's only "stats", and each one is
+ * checkable inside the product rather than being a marketing number.
+ */
 const LEDGER = [
-  {
-    figure: "2,00,000+",
-    text: "medicines already in the catalogue — you won't type yours in",
-  },
-  {
-    figure: "FEFO",
-    text: "nearest expiry is picked and sold first, automatically",
-  },
-  {
-    figure: "CGST · SGST · IGST",
-    text: "worked out per line, in-state or out, on every bill",
-  },
-  // "counter PC, phone and browser" lived here too — the hero's own note says
-  // it 300px earlier, so it was the same fact twice before the first scroll.
+  { figure: "2,00,000+", text: "medicines already in the catalogue" },
+  { figure: "FEFO", text: "nearest expiry sold first, automatically" },
+  { figure: "CGST · SGST · IGST", text: "worked out per line, on every bill" },
 ];
 
-const LOSSES = [
+/**
+ * The four capabilities, each carried by its diagram.
+ *
+ * One sentence each. The old page gave these five bullets apiece; if a chemist
+ * wants that level of detail he is already in the free trial, where the real
+ * answer lives.
+ */
+const CAPABILITIES = [
   {
-    tag: "Money on the shelf",
-    title: "Stock expires before you notice",
-    what: "A strip that crosses its date is a full write-off — you paid for it and you can't sell it. By the time it turns up in a stock check, the supplier won't take it back either.",
-    fix: "Plusveda sells the nearest-expiry batch first and shows you what's going short-dated while there is still time to return it.",
+    id: "fefo",
+    kicker: "Expiry, handled",
+    title: "The nearest-expiry batch sells itself",
+    line: "Not an alert someone has to notice — the lot closest to its date is the one that goes on the bill.",
+    Fig: FigFefo,
   },
   {
-    tag: "The queue",
-    title: "Billing is slower than the counter",
-    what: "Find the medicine, then the batch, then the rate, then the GST — for every line, with four people waiting and one of them asking whether you have a cheaper salt.",
-    fix: "Scan the pack, or type a brand or salt name. Batch, expiry, rate and GST land on the line already filled in.",
+    id: "runway",
+    kicker: "Money back",
+    title: "See short-dated stock months out",
+    line: "Early enough that the distributor will still take it back, which is the difference between a return and a write-off.",
+    Fig: FigExpiryRunway,
   },
   {
-    tag: "Buying blind",
-    title: "The reorder list lives in your head",
-    what: "You remember the fast movers on the day the distributor calls, and forget the one a customer asked for on Tuesday. The order goes out short.",
-    fix: "ShortBook records it the moment it happens — one tap at the counter — and turns the list into a purchase order.",
-  },
-];
-
-const FEATURES = [
-  {
-    label: "Billing",
-    title: "Billing that keeps up with the queue",
-    body: "Search by brand name or by salt, or scan the pack — the nearest-expiry batch is chosen for you, priced, and taxed.",
-    points: [
-      "Barcode, pack photo, brand name or salt composition — four ways to find one medicine",
-      "Sell by strip or by piece; the rate converts itself",
-      "CGST + SGST for local supply, IGST outside the state",
-      "Cash, card, UPI or credit — then print or share the invoice",
-      "Out of stock? Same-salt substitutes that are on your shelf, in one tap",
-    ],
-  },
-  {
-    label: "Expiry",
-    title: "See expiry coming, months out",
-    body: "Short-dated stock is worth full value to your supplier and nothing at all to you. The difference is how early you spot it.",
-    points: [
-      "Every medicine tracked by batch, expiry date and shelf location",
-      "Near-expiry report while the stock can still go back",
-      "Damage and write-offs recorded with a reason, so the loss is explainable",
-      "Batch and expiry search — find one lot across the whole shop",
-    ],
-  },
-  {
-    label: "Reordering",
+    id: "shortbook",
+    kicker: "Buying",
     title: "The reorder list writes itself",
-    body: "ShortBook is built from what you actually sell and what customers ask for — not from a number you guessed when you set the product up.",
-    points: [
-      "Add any medicine while billing, in one tap, without leaving the bill",
-      "Set how many of each you want to keep on the shelf",
-      "Turn the whole list into a purchase order for the distributor",
-    ],
+    line: "One tap at the counter when something runs short or a customer asks for it. The list becomes the purchase order.",
+    Fig: FigShortbook,
   },
   {
-    label: "Suppliers & money",
-    title: "What you owe, and what clears when",
-    body: "Purchases, returns and the cheque register in the same place as the stock they paid for.",
-    points: [
-      "Purchase returns recorded against the original bill",
-      "Supplier ledger with what is outstanding against each one",
-      "Cheque / PDC register so a post-dated cheque never surprises you",
-      "Warehouse and branch transfers, tracked both ends",
-    ],
-  },
-  {
-    label: "Owner's view",
-    title: "Know what happened, and who did it",
-    body: "The counter runs on the app; you run on what it tells you afterwards. Both from the same data, wherever you are.",
-    points: [
-      "Sales, expiry, warehouse and staff activity reports — export to Excel or PDF",
-      "Add staff and choose exactly what each person can see and do",
-      "A full audit trail of who did what, and when",
-      "Limit how many devices one account can be signed in on",
-    ],
+    id: "devices",
+    kicker: "Everywhere",
+    title: "Counter PC, phone, browser",
+    line: "The same stock, so the shop and the owner are never looking at two different numbers.",
+    Fig: FigOneStock,
   },
 ];
 
 /**
- * Deliberately framed as questions about a workflow, not as claims about named
- * competitors. Every "Usually" line describes the common way of doing the job,
- * which a chemist can verify against their own software in a minute — and
- * which cannot go stale or become a claim we have to defend when a rival ships
- * an update.
+ * Framed as questions about the WORK, not as claims about named competitors.
+ * Each "usually" describes the common way of doing the job, which a chemist can
+ * check against his own software in a minute — and which cannot go stale or
+ * turn into a claim we have to defend when a rival ships an update.
  */
 const COMPARISONS = [
   {
-    q: "How does a purchase bill get in?",
-    usual:
-      "Typed line by line, or imported only if that particular distributor sends you a digital file.",
-    ours:
-      "Photograph the paper bill. It reads every line — which works with the small distributor who only ever gives you paper.",
+    q: "Getting a purchase bill in",
+    usual: "Typed line by line",
+    ours: "Photograph it",
   },
   {
-    q: "Which batch gets sold?",
-    usual:
-      "Whichever the counter picks, with an alert if someone remembers to look at it.",
-    ours:
-      "Nearest expiry, chosen automatically on every line, with the batch and its date on screen while you bill.",
+    q: "Which batch gets sold",
+    usual: "Whichever the counter picks",
+    ours: "Nearest expiry, every time",
   },
   {
-    q: "What happens when you're out of stock?",
-    usual: "You tell the customer to try somewhere else.",
-    ours:
-      "Same-salt substitutes already on your shelf, in one tap — and the medicine goes onto the reorder list at the same time.",
+    q: "When you're out of stock",
+    usual: "Send them elsewhere",
+    ours: "Same-salt substitute, one tap",
   },
   {
-    q: "Where does the reorder list come from?",
-    usual:
-      "A minimum quantity someone typed in once when the product was created.",
-    ours:
-      "What you actually sold, plus anything a customer asked for and you couldn't fill — added in one tap at the counter.",
+    q: "Where the reorder list comes from",
+    usual: "A number typed in once",
+    ours: "What you actually sold",
   },
   {
-    q: "What does the counter assistant see?",
-    usual: "Everything, or a role you can't change without calling support.",
-    ours:
-      "Exactly what you choose, per person, and an audit trail of who did what.",
+    q: "What the assistant can see",
+    usual: "Everything",
+    ours: "Exactly what you choose",
   },
-  {
-    q: "What does it cost to start?",
-    usual: "An annual plan, paid up front, before you have entered one bill.",
-    ours: "Nothing. Sign up, enter your stock, and see whether it suits you.",
-  },
+  { q: "Cost to start", usual: "A year, up front", ours: "Nothing" },
 ];
 
+/**
+ * Trust questions only. Every one of these is something a chemist asks before
+ * he will put his stock in — and none of them can be answered by a picture.
+ */
 const FAQS = [
   {
     q: "Do I have to type in all my medicines first?",
-    a: "No. Plusveda ships with a catalogue of over two lakh medicines — brand, salt composition, manufacturer and pack. You search for what you stock and add it. Your rates, batches and quantities are yours; the medicine details are already there.",
+    a: "No. Over two lakh medicines ship with it — brand, salt, manufacturer and pack. You search for what you stock and add it. Your rates, batches and quantities are yours; the medicine details are already there.",
   },
   {
     q: "Does it handle GST properly?",
-    a: "Yes. GST is worked out per line — CGST and SGST for supply inside your state, IGST outside it — and the totals are calculated on the server, not in the browser, so the bill and the report always agree. Reports export to Excel and PDF.",
-  },
-  {
-    q: "Can my staff use it without seeing everything?",
-    a: "Yes. You add each person and choose exactly what they can see and do, so a counter assistant can bill without opening your purchase rates or your reports. Every action is written to an audit trail with a name and a time against it.",
+    a: "Yes. Per line — CGST and SGST inside your state, IGST outside it — and the totals are worked out on the server, so the bill and the report always agree. Reports export to Excel and PDF.",
   },
   {
     q: "What happens to a bill photo I upload?",
-    a: "It is sent to Google's Gemini service to read the printed text off it, and the text comes back into your goods-received note. That is written down plainly in our privacy policy, and it is the only place your data leaves our servers.",
+    a: "It goes to Google's Gemini service to read the printed text, and the text comes back into your goods-received note. That is written plainly in our privacy policy, and it is the only place your data leaves our servers.",
   },
   {
-    q: "Does Plusveda store patient records or prescriptions?",
+    q: "Does it store patient records or prescriptions?",
     a: "No. It records what your pharmacy bought and sold. There are no patient files, no prescriptions and no medical advice anywhere in it.",
-  },
-  {
-    q: "What does it run on?",
-    a: "Any browser, an Android phone or tablet, and a Windows desktop app for the counter PC. They all read and write the same stock, so the shop and the owner are never looking at two different numbers.",
   },
 ];
 
 /* ---- page ---------------------------------------------------------------- */
 
-/**
- * True on a phone, and it keeps listening — a tablet turned on its side or a
- * desktop window dragged narrow crosses this line, and reading it once at
- * mount left the spec sheet in whichever state the first paint happened to
- * catch.
- */
-function useIsPhone() {
-  const [phone, setPhone] = useState(false);
-  useEffect(() => {
-    if (typeof matchMedia === "undefined") return;
-    const mq = matchMedia("(max-width: 640px)");
-    const sync = () => setPhone(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
-  return phone;
-}
-
 export default function App() {
-  const phone = useIsPhone();
-
   return (
     <div id="top">
       <StickyBar />
+
       <header className="nav">
         <div className="wrap nav-inner">
           <Brand />
           <nav className="nav-links">
-            <a href="#losses">Why switch</a>
-            <a href="#features">What's inside</a>
-            <a href="#how">Getting started</a>
+            <a href="#what">What it does</a>
+            <a href="#compare">Compare</a>
             <a href="#faq">Questions</a>
           </nav>
           <div className="nav-cta">
@@ -322,17 +247,18 @@ export default function App() {
         </div>
       </header>
 
+      {/*
+        HERO. The headline leads with the purchase bill rather than billing
+        speed: "bill in seconds" is what Marg, eVitalRx, Vyapar and myBillBook
+        all say, so saying it louder wins nothing. Reading a photographed paper
+        invoice is the job none of them advertises and the one a chemist dreads.
+
+        The diagram does the explaining. One sentence supports it, and that is
+        the whole of the hero copy.
+      */}
       <section className="hero">
         <div className="wrap hero-grid">
-          {/*
-            The headline leads with the purchase bill, not with billing speed.
-            "Bill in seconds" is what Marg, eVitalRx, Vyapar and myBillBook all
-            say — it is the price of entry in this category, so saying it
-            louder wins nothing. Reading a photographed paper invoice is the
-            thing none of them puts on their own marketing page, and it is the
-            job a chemist actually dreads.
-          */}
-          <div>
+          <div className="hero-copy">
             <p className="label">For medical stores in India</p>
             <h1>
               Stop typing purchase bills.
@@ -340,19 +266,15 @@ export default function App() {
               <span className="accent">Photograph them.</span>
             </h1>
             <p className="hero-sub">
-              Plusveda reads your distributor's invoice — every line, with
-              batch, expiry, MRP, rate and GST — and turns it into stock you can
-              sell. Then it bills, watches expiry and writes your reorder list.
+              Every line — batch, expiry, MRP, rate and GST — read off your
+              distributor's invoice and turned into stock you can sell.
             </p>
             <Cta note="Free to start · no card needed · browser, Android and the counter PC" />
           </div>
 
-          {/* Navigable, and every screen in it is a photograph rather than a
-              replica — see ScreenPreview.tsx. It runs off the right edge of
-              the page on purpose: that keeps the app big enough to read. */}
-          <div className="hero-shot">
-            <ScreenPreview />
-          </div>
+          <figure className="hero-fig">
+            <FigBillToStock className="fig" />
+          </figure>
         </div>
       </section>
 
@@ -368,308 +290,103 @@ export default function App() {
       </section>
 
       {/*
-        The differentiator, given its own section high on the page.
-
-        Every number here was measured, not written: three real distributor
-        invoices photographed on a phone and run through the live app. They came
-        back in 10s, 18s and about 66s. The page says "under a minute" and shows
-        the spread rather than quoting the 10-second run, because the client
-        will demo this in front of a chemist and a cherry-picked number gets
-        found out in the first meeting.
+        WHAT IT DOES — one diagram per capability, alternating sides so the eye
+        zig-zags down the page instead of running down a column of identical
+        cards. On a phone they stack, graphic first: the picture is the point,
+        and it should arrive before the words.
       */}
-      <section className="section section-sunken" id="scan">
+      <section className="section" id="what">
         <div className="wrap">
           <div className="section-head">
             <div>
-              <p className="label">The part nobody else automates</p>
-              <h2>Photograph the bill. It types itself.</h2>
-            </div>
-            <div>
-              <p>
-                Entering a distributor's invoice by hand is the longest job of
-                the week, and the one that puts wrong batches and wrong expiry
-                dates into your stock. Take a picture of it instead.
-              </p>
+              <p className="label">What it does</p>
+              <h2>Four jobs a medical store does every day</h2>
             </div>
           </div>
 
-          {/* A flow, not another STEP 01/02/03 block — "Getting started" lower
-              down already uses that treatment, and running it twice on one
-              page makes both look like filler. */}
-          <div className="flow">
-            <div className="flow-item">
-              <span className="flow-n">Photograph</span>
-              <p>
-                Phone camera, gallery or a PDF. Sideways and upside-down photos
-                are fine.
-              </p>
-            </div>
-            <div className="flow-item">
-              <span className="flow-n">It reads every line</span>
-              <p>
-                Product, batch, expiry, quantity, rate, MRP, discount and GST —
-                plus supplier, invoice number and date off the header.
-              </p>
-            </div>
-            <div className="flow-item">
-              <span className="flow-n">You confirm</span>
-              <p>
-                Anything it isn't sure of is flagged for checking. Nothing
-                reaches your stock until you say so.
-              </p>
-            </div>
-          </div>
-
-          <div className="ledger-grid scan-figures">
-            <div className="ledger-cell">
-              <strong>Under a minute</strong>
-              <span>
-                three real distributor bills, photographed on a phone: 10s, 18s
-                and 66s from picture to a checked draft
-              </span>
-            </div>
-            <div className="ledger-cell">
-              <strong>11 lines</strong>
-              <span>
-                read off one of them — with the batch and expiry on every line,
-                not just the totals
-              </span>
-            </div>
-            {/* No fourth "you confirm" cell — the flow above already ends on
-                it, and saying it twice in 300px is padding. */}
-            <div className="ledger-cell">
-              <strong>Upside down</strong>
-              <span>
-                one of the three was photographed the wrong way up on a shop
-                counter. It read it anyway
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section" id="losses">
-        <div className="wrap">
-          <div className="section-head">
-            <div>
-              <p className="label">Why a chemist switches</p>
-              <h2>Three things quietly cost you money every month</h2>
-            </div>
-            <div>
-              <p>
-                None of them looks like an emergency on any single day. That is
-                exactly why they add up.
-              </p>
-            </div>
-          </div>
-
-          <div className="losses">
-            {LOSSES.map((l, i) => (
-              <details className="loss" key={l.title} open={!phone}>
-                <summary>
-                  <span className="loss-n">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span>
-                    <span className="loss-tag">{l.tag}</span>
-                    <h3>{l.title}</h3>
-                  </span>
-                </summary>
-                <p className="loss-what">{l.what}</p>
-                <div className="loss-fix">
-                  <span className="label-plain">With Plusveda</span>
-                  {l.fix}
+          <div className="caps">
+            {CAPABILITIES.map(({ id, kicker, title, line, Fig }) => (
+              <article className="cap" key={id}>
+                <figure className="cap-fig">
+                  <Fig className="fig" />
+                </figure>
+                <div className="cap-copy">
+                  <p className="label">{kicker}</p>
+                  <h3>{title}</h3>
+                  <p>{line}</p>
                 </div>
-              </details>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/*
-        Specifications, not a slideshow.
-        This section used to repeat a full-width screenshot under every heading
-        — five of them, all screens the visitor could already click through in
-        the hero. That is the same proof twice, and it cost about 4,000px of
-        scrolling to say nothing new. Free-to-start products convert on short
-        pages; the reader who is still here wants the spec sheet, not another
-        picture of a screen they just drove.
-      */}
-      <section className="section section-sunken" id="features">
+      <section className="section section-sunken" id="compare">
         <div className="wrap">
           <div className="section-head">
             <div>
-              <p className="label">What's inside</p>
-              <h2>The whole shop, not just the billing screen</h2>
-            </div>
-            <div>
-              <p>
-                Every one of these is on the screens you just clicked through —
-                scroll back up and open any of them.
-              </p>
+              <p className="label">Side by side</p>
+              <h2>The same six jobs, done two ways</h2>
             </div>
           </div>
 
-          {/*
-            Open on a desktop, folded on a phone.
-            Laid flat, these five ran to about 1,600px of phone scrolling —
-            most of it detail that a chemist skims past looking for the one
-            area they came to check. Folded, the five headings fit on one
-            screen and the reader opens what they care about. Desktop has the
-            room, so it keeps them all open and nobody has to click anything.
-          */}
-          <div className="specs">
-            {FEATURES.map((f) => (
-              <details className="spec" key={f.title} open={!phone}>
-                <summary>
-                  <span>
-                    <span className="label">{f.label}</span>
-                    <h3>{f.title}</h3>
-                  </span>
-                </summary>
-                <p className="spec-body">{f.body}</p>
-                <ul>
-                  {f.points.map((pt) => (
-                    <li key={pt}>
-                      <i aria-hidden="true">—</i>
-                      <span>{pt}</span>
-                    </li>
-                  ))}
-                </ul>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/*
-        What a chemist is comparing us against.
-
-        Nothing here names a competitor or asserts what their software does —
-        that is a claim we would have to defend, and product pages go stale. It
-        describes the WORKFLOWS instead, which a chemist can check against
-        whatever they are using today in about a minute.
-      */}
-      <section className="section" id="different">
-        <div className="wrap">
-          <div className="section-head">
-            <div>
-              <p className="label">Worth comparing</p>
-              <h2>Check these against what you use today</h2>
+          <div className="compare" role="table" aria-label="How the work differs">
+            <div className="compare-head" role="row">
+              <span role="columnheader">The job</span>
+              <span role="columnheader">Usually</span>
+              <span role="columnheader" className="is-ours">
+                With Plusveda
+              </span>
             </div>
-            <div>
-              <p>
-                Not a feature list — the handful of things that decide whether
-                software saves you an hour or costs you one. Ask your current
-                vendor about each.
-              </p>
-            </div>
-          </div>
-
-          {/* Folded on a phone, laid out in three columns on a desktop — the
-              same trick the spec sheet uses, for the same reason: six of these
-              flat is most of a phone screen each. */}
-          <div className="compare">
             {COMPARISONS.map((c) => (
-              <details className="compare-row" key={c.q} open={!phone}>
-                <summary>
-                  <h3>{c.q}</h3>
-                </summary>
-                <p className="compare-usual">
-                  <span className="label-plain">Usually</span>
+              <div className="compare-row" role="row" key={c.q}>
+                <span role="cell" className="compare-q">
+                  {c.q}
+                </span>
+                <span role="cell" className="compare-usual">
                   {c.usual}
-                </p>
-                <p className="compare-ours">
-                  <span className="label-plain">Plusveda</span>
+                </span>
+                <span role="cell" className="compare-ours">
                   {c.ours}
-                </p>
-              </details>
+                </span>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="section" id="how">
-        <div className="wrap">
-          <div className="section-head">
-            <div>
-              <p className="label">Getting started</p>
-              <h2>Billing your first customer takes an afternoon, not a week</h2>
-            </div>
-            <div>
-              <p>
-                Nobody has to visit your shop, and there is nothing to install
-                on the counter PC unless you want the desktop app.
-              </p>
-            </div>
-          </div>
-
-          <div className="steps">
-            <article className="step">
-              <p className="step-n">STEP 01</p>
-              <h3>Create your pharmacy</h3>
-              <p>
-                Your shop name, GSTIN and drug licence number. A few minutes,
-                and you are inside the software.
-              </p>
-            </article>
-            <article className="step">
-              <p className="step-n">STEP 02</p>
-              <h3>Pick what you stock</h3>
-              <p>
-                Search the two-lakh catalogue and add what is on your shelves,
-                then enter opening batches — or let your first purchase bill do
-                it by photograph.
-              </p>
-            </article>
-            <article className="step">
-              <p className="step-n">STEP 03</p>
-              <h3>Start billing</h3>
-              <p>
-                Scan a pack and sell. Expiry tracking, GST, ShortBook and the
-                reports fill themselves in from the sales you make.
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section className="section section-sunken">
+      {/*
+        Where we are. Short, and it stays: it is the honest substitute for the
+        logo wall this page cannot have, and being early is a reason for a first
+        customer to talk to us rather than a weakness to hide.
+      */}
+      <section className="section">
         <div className="wrap letter">
           <div>
             <p className="label">Where we are</p>
-            <h2>We're taking on our first pharmacies now</h2>
+            <h2>Taking on our first pharmacies now</h2>
           </div>
           <div>
             <p>
-              You won't find a wall of customer logos on this page, because it
-              would not be true yet. Plusveda is built, it works, and every
-              screenshot above is the real thing — but we are at the start,
-              looking for a handful of medical stores to run it properly and
-              tell us where it hurts.
+              No customer logos on this page, because it would not be true yet.
+              Plusveda is built and it works — we are looking for a handful of
+              medical stores to run it properly and tell us where it hurts.
             </p>
             <p>
-              If that is interesting to you, talk to us before you sign up. You
-              will get us on the phone rather than a support ticket, and what
-              you ask for is what gets built next.
+              Talk to us before you sign up. You get us on the phone rather than
+              a support ticket, and what you ask for is what gets built next.
             </p>
             <p className="sign">— The team at {site.company}</p>
           </div>
         </div>
       </section>
 
-      <section className="section" id="faq">
+      <section className="section section-sunken" id="faq">
         <div className="wrap">
           <div className="section-head">
             <div>
               <p className="label">Straight answers</p>
-              <h2>Questions a chemist actually asks</h2>
-            </div>
-            <div>
-              <p>
-                If yours is not here, ask us — the same person who built it will
-                answer.
-              </p>
+              <h2>Before you put your stock in</h2>
             </div>
           </div>
           <div className="faq">
@@ -687,11 +404,8 @@ export default function App() {
         <div className="wrap close-cta-grid">
           <div>
             <p className="label">Start today</p>
-            <h2>Your shelf, finally telling you the truth</h2>
-            <p>
-              Add your own medicines and put a real bill through it. Nothing to
-              install, and nothing to pay.
-            </p>
+            <h2>Put one real bill through it</h2>
+            <p>Nothing to install, and nothing to pay.</p>
           </div>
           <div>
             <Cta note="Prefer to talk first? We'd rather that too." />
@@ -712,8 +426,8 @@ export default function App() {
             <div className="footer-cols">
               <div className="footer-col">
                 <h4>Product</h4>
-                <a href="#features">What's inside</a>
-                <a href="#how">Getting started</a>
+                <a href="#what">What it does</a>
+                <a href="#compare">Compare</a>
                 <a href="#faq">Questions</a>
                 {site.playStoreUrl ? (
                   <a href={site.playStoreUrl}>Get it on Google Play</a>

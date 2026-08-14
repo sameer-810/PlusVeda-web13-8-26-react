@@ -31,13 +31,17 @@
       property="og:description"
       content="Plusveda reads your distributor's invoice — every line, with batch, expiry, MRP and GST. Billing, stock and expiry for Indian medical stores."
     />
-    <meta property="og:image" content="/shots/receive.png" />
+    <meta property="og:image" content="/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:locale" content="en_IN" />
     <meta name="twitter:card" content="summary_large_image" />
 
     <link rel="icon" type="image/png" href="/icon.png" />
 
-    <!-- Poppins for headings, Inter for body — the app's two faces. preconnect
+    <!-- Inter for everything, Plex Mono for figures. Poppins came off when the
+         app dropped it: one grotesque plus one mono is the whole type system,
+         and a third family is a request the page does not need. preconnect
          first so the font request doesn't wait on a fresh DNS+TLS handshake. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -45,26 +49,14 @@
          It is the reason the design reads as a pharmacy register rather than a
          SaaS template, so it is not decoration and it is not optional. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
       rel="stylesheet"
     />
 
-    <!-- The hero image is the Largest Contentful Paint on every viewport, so it
-         is fetched before the JS that would otherwise discover it. Each is
-         media-gated: a phone must not spend its data on the 1440px desktop
-         screenshot it will never be shown. -->
-    <link
-      rel="preload"
-      as="image"
-      href="/shots/receive.png"
-      media="(min-width: 641px)"
-    />
-    <link
-      rel="preload"
-      as="image"
-      href="/shots/phone/receive.png"
-      media="(max-width: 640px)"
-    />
+    <!-- No hero image to preload any more. The hero graphic is an inline SVG
+         inside the JS bundle, so there is no separate image request to race —
+         which is the cheapest possible LCP and the reason the two media-gated
+         screenshot preloads that used to live here are gone. -->
 
     <script type="application/ld+json">
       {
