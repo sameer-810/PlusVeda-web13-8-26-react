@@ -39,24 +39,26 @@
 
     <link rel="icon" type="image/png" href="/icon.png" />
 
-    <!-- Inter for everything, Plex Mono for figures. Poppins came off when the
-         app dropped it: one grotesque plus one mono is the whole type system,
-         and a third family is a request the page does not need. preconnect
-         first so the font request doesn't wait on a fresh DNS+TLS handshake. -->
+    <!-- Outfit for headings, matching the reference site the owner asked this
+         page to follow; Inter for body text, matching the product itself. Plex
+         Mono carries the figures and labels. preconnect first so the font
+         request doesn't wait on a fresh DNS+TLS handshake. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Plex Mono carries every figure, label and section number on the page.
-         It is the reason the design reads as a pharmacy register rather than a
-         SaaS template, so it is not decoration and it is not optional. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
       rel="stylesheet"
     />
 
-    <!-- No hero image to preload any more. The hero graphic is an inline SVG
-         inside the JS bundle, so there is no separate image request to race —
-         which is the cheapest possible LCP and the reason the two media-gated
-         screenshot preloads that used to live here are gone. -->
+    <!-- The hero is a real screenshot again, so it IS the LCP element and it
+         is worth a preload: without this it cannot even be discovered until
+         React has parsed, executed and rendered. -->
+    <link
+      rel="preload"
+      as="image"
+      href="/shots/dashboard.png"
+      fetchpriority="high"
+    />
 
     <script type="application/ld+json">
       {

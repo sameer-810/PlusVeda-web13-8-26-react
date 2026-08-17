@@ -59,10 +59,11 @@
 
   --page: 1180px;
 
-  /* One grotesque, matching the app. Poppins came off both sides together —
-     a geometric display face beside data type is the clearest "consumer app"
-     tell there is, and the product it is advertising no longer uses it. */
-  --font-head: "Inter", "Segoe UI", system-ui, sans-serif;
+  /* Outfit on headings: the reference site the owner asked this page to match
+     is set entirely in it, and the face is most of why their page reads the
+     way it does. Body copy stays Inter, which is what the product itself
+     uses — Outfit is a display face and gets tiring at 16px over a paragraph. */
+  --font-head: "Outfit", "Inter", "Segoe UI", system-ui, sans-serif;
   --font-body: "Inter", "Segoe UI", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", monospace;
 }
@@ -104,6 +105,14 @@ a {
 img {
   max-width: 100%;
   display: block;
+}
+
+/* `display: block` above beats the user-agent rule that makes [hidden] work,
+   so the showcase rendered all four of its panels stacked on top of each
+   other. Any element-level display value does this — it is not specific to
+   images, so the reset is written for both. */
+[hidden] {
+  display: none !important;
 }
 
 /* Inline padding only, never the shorthand. `.wrap` is co-classed onto elements
@@ -258,6 +267,57 @@ img {
 .hero {
   border-bottom: 1px solid var(--rule);
   overflow: hidden;
+  /* A deep brand band, not a white page with a picture on it. The reference
+     site the owner sent leads with a saturated teal hero and it is the reason
+     that page reads as confident at a glance; a white hero with a pale
+     illustration beside it reads as a document. */
+  background: linear-gradient(135deg, #0b6f45 0%, #0f8a63 45%, #12798f 100%);
+  color: #ffffff;
+}
+
+.hero .label {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.hero .hero-sub {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.hero .hero-note {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.hero .label::before {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.hero h1 {
+  color: #ffffff;
+}
+
+/* On the dark band the brand green vanishes into the background — the emphasis
+   has to come from a pale tint. `span.accent` outranks the base `.hero h1
+   .accent` rule further down the file. */
+.hero h1 span.accent {
+  color: #c9f7e2;
+}
+
+/* Primary CTA inverts on the band — white pill, brand text — so it stays the
+   loudest thing on the hero. */
+.hero .btn-primary {
+  background: #ffffff;
+  color: var(--brand-800);
+  border-color: #ffffff;
+}
+
+.hero .btn-ghost {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.45);
+  background: transparent;
+}
+
+.hero .btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .hero-grid {
@@ -587,84 +647,6 @@ img {
   color: var(--brand-700);
 }
 
-.footer-bottom {
-  padding-top: 26px;
-  display: flex;
-  justify-content: space-between;
-  gap: 26px;
-  flex-wrap: wrap;
-  font-size: 13px;
-  color: var(--text-tertiary);
-}
-
-/* ---- Responsive ---------------------------------------------------------
-   960 is the small laptop a counter PC often is; 640 the owner's phone. */
-
-/* ---- Figures ------------------------------------------------------------
-   Every graphic on this page is an inline SVG workflow diagram rather than a
-   product screenshot — see Illustrations.tsx for why. They scale with their
-   column, so there is no fixed height to break and nothing to art-direct at
-   each breakpoint. */
-
-.fig {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.hero-fig {
-  margin: 0;
-  /* The hero diagram is the explanation, so it gets room rather than being
-     tucked beside the copy as an ornament. */
-  padding: 8px 0 40px;
-  align-self: center;
-}
-
-/* ---- What it does -------------------------------------------------------
-   Alternating sides so the eye zig-zags down the page. A column of four
-   identical left-image cards is the template look this page exists to avoid. */
-
-.caps {
-  display: grid;
-  gap: 4px;
-  margin-top: 44px;
-  border-top: 1px solid var(--rule);
-}
-
-.cap {
-  display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
-  gap: 56px;
-  align-items: center;
-  padding: 44px 0;
-  border-bottom: 1px solid var(--rule);
-}
-
-.cap:nth-child(even) .cap-fig {
-  order: 2;
-}
-
-.cap-fig {
-  margin: 0;
-  padding: 18px 22px;
-  background: var(--surface-sunken);
-  border-radius: var(--radius-lg);
-}
-
-.cap-copy h3 {
-  font-size: 25px;
-  font-weight: 700;
-  margin: 10px 0 0;
-  letter-spacing: -0.01em;
-}
-
-.cap-copy > p {
-  margin: 12px 0 0;
-  color: var(--text-secondary);
-  font-size: 16.5px;
-  max-width: 44ch;
-}
-
 /* ---- Side by side -------------------------------------------------------
    A ruled three-column register, not a pair of pricing-style cards. The job is
    the row label; the two answers sit beside each other so the difference is
@@ -813,7 +795,7 @@ img {
      On a phone that same air is pure scrolling between the reader and the
      button, so it comes down. */
   .section {
-    padding: 46px 0;
+    padding: 38px 0;
   }
 
   .section-head {
@@ -842,8 +824,9 @@ img {
     gap: 0;
   }
 
-  .hero-shot {
-    margin-top: 24px;
+  .hero-fig {
+    margin-top: 18px;
+    padding-bottom: 8px;
   }
 
   .hero h1 {
@@ -868,7 +851,7 @@ img {
     margin-top: 16px;
   }
 
-  .hero-shot {
+  .hero-fig {
     order: 2;
   }
 
@@ -1006,32 +989,7 @@ img {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-
-  .btn {
-    transition: none;
-  }
-}
-
-@media (max-width: 900px) {
-  .cap {
-    grid-template-columns: 1fr;
-    gap: 22px;
-    padding: 34px 0;
-  }
-  /* Graphic first on a phone, always: the picture is the point, and it should
-     arrive before the words rather than after them. The `order` that alternates
-     sides on a wide screen has to be reset or every other row flips. */
-  .cap:nth-child(even) .cap-fig {
-    order: 0;
-  }
-  .cap-copy h3 {
-    font-size: 21px;
-  }
-  .cap-copy > p {
-    font-size: 15.5px;
-  }
-  .hero-fig {
+  }  .hero-fig {
     padding: 0 0 28px;
   }
 }
@@ -1054,5 +1012,480 @@ img {
   .compare-ours::before {
     content: "Plusveda — ";
     color: var(--brand-700);
+  }
+}
+
+
+/* ---- Wave dividers ------------------------------------------------------
+   Layered curves between bands instead of a straight edge. `display:block` on
+   the svg kills the inline-element descender gap that otherwise shows as a
+   hairline of the wrong colour under the wave. */
+
+.wave {
+  position: relative;
+  width: 100%;
+  line-height: 0;
+  /* Sits over the band above so there is never a seam between the two. */
+  margin-top: -1px;
+  pointer-events: none;
+}
+
+.wave svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.wave-flip {
+  transform: rotate(180deg);
+  margin-top: 0;
+  margin-bottom: -1px;
+}
+
+/* The absolutely-positioned wave takes no layout space, so the band has to
+   reserve it — without this the curve is drawn straight over the last line of
+   hero copy. Matches the wave's own height. */
+.hero .hero-grid {
+  padding-bottom: 118px;
+}
+
+@media (max-width: 640px) {
+  .hero .hero-grid {
+    padding-bottom: 64px;
+  }
+}
+
+/* A wave at the BOTTOM of a coloured band has to escape that band's own
+   padding, or it floats in the middle of the colour with a strip of the band
+   still below it. */
+.hero .wave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.hero {
+  position: relative;
+}
+
+/* The flipped wave sits at the TOP of the closing band.
+   Two things this needs that are easy to miss:
+   1. Top padding that clears the wave. It is absolutely positioned, so it
+      occupies no layout space and will otherwise be drawn straight over the
+      "Start free" button.
+   2. An explicit stacking order. A positioned element paints above in-flow
+      content regardless of DOM order, so being first in the markup does not
+      put it behind — the content has to be lifted deliberately. */
+.close-cta {
+  position: relative;
+  padding-top: 96px;
+}
+
+.wave-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
+}
+
+.close-cta > .close-cta-grid {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 900px) {
+  .close-cta {
+    padding-top: 60px;
+  }
+}/* ---- Scroll reveal ------------------------------------------------------
+   Armed by useReveal() at runtime, never in the markup — see the hook for why
+   the page must render visible by default. Transform and opacity only, so the
+   whole thing stays off the main thread. */
+
+.reveal-armed {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+.reveal-in {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 520ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 520ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Belt and braces: the hook already bails out, but if anything ever adds
+     these classes by another route they must still be inert. */
+  .reveal-armed,
+  .reveal-in {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* =========================================================================
+   REFERENCE-SITE LAYOUT
+   =========================================================================
+   The owner asked for the same page as the reference site he sent, so these
+   sections copy its structure: a product shot floating in the gradient hero,
+   a tabbed showcase where they play video, an eight-card image grid, a price
+   band, centred section headings.
+
+   This block is appended deliberately. Several rules below restate selectors
+   defined earlier in the file (.hero-fig, .section-head) and win on source
+   order at equal specificity, which is cheaper to read than hunting down and
+   rewriting the originals — and leaves the earlier layout intact if a section
+   is ever reverted.
+   ========================================================================= */
+
+/* ---- Pill CTA -----------------------------------------------------------
+   The one place the reference's rounded style is adopted wholesale: its calls
+   to action are fully rounded, and after the wave it is the most recognisable
+   thing about that page. */
+.btn-pill {
+  border-radius: 9999px;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+/* ---- Hero: a real screenshot, not a drawing ---------------------------- */
+
+.hero-fig {
+  margin: 0;
+  padding: 8px 0 46px;
+  align-self: center;
+}
+
+.hero-fig img {
+  height: auto;
+  border-radius: 12px;
+  /* Bleeds off the right edge exactly as the reference does. It buys back
+     ~90px of width, which is what keeps the app's own type legible instead of
+     turning it into a grey smear. */
+  max-width: none;
+  width: calc(100% + 90px);
+  box-shadow: 0 24px 60px rgba(4, 30, 20, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+/* ---- Centred section headings ------------------------------------------
+   The reference centres every section heading. Both alignments are on the
+   page now: the feature grid and the showcase read as lopsided under a
+   left-aligned head, while the comparison table still wants the original. */
+.section-head.is-centred {
+  grid-template-columns: 1fr;
+  justify-items: center;
+  text-align: center;
+  border-bottom: 0;
+  padding-bottom: 0;
+  margin-bottom: 44px;
+}
+
+.section-head.is-centred .label {
+  justify-content: center;
+}
+
+.section-head.is-centred h2 {
+  font-size: clamp(29px, 3.4vw, 40px);
+  font-weight: 700;
+}
+
+.section-sub {
+  margin-top: 14px;
+  font-size: 17px;
+  color: var(--text-secondary);
+  max-width: 54ch;
+}
+
+.section-head.is-centred .section-sub {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ---- "What is Plusveda" ------------------------------------------------- */
+
+.what-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 60px;
+  align-items: center;
+}
+
+/* Holds a screenshot, not a photograph, so it keeps its own aspect ratio —
+   cropping an application screen to a fixed height slices the sidebar off at
+   an arbitrary row. */
+.what-fig {
+  margin: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  box-shadow: 0 18px 44px rgba(11, 42, 30, 0.12);
+}
+
+.what-fig img {
+  width: 100%;
+  height: auto;
+}
+
+.what-copy h2 {
+  font-size: clamp(28px, 3.2vw, 40px);
+  font-weight: 700;
+  margin-top: 16px;
+}
+
+.what-copy > p {
+  margin-top: 18px;
+  font-size: 16.5px;
+  color: var(--text-secondary);
+  max-width: 46ch;
+}
+
+.what-copy .hero-cta {
+  margin-top: 28px;
+}
+
+/* ---- Tabbed showcase ----------------------------------------------------
+   Pill tabs over a large product still, in place of the reference's video. */
+
+.showcase-tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 26px;
+}
+
+.showcase-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-start;
+  padding: 11px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--rule);
+  background: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  text-align: left;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.showcase-tab:hover {
+  border-color: var(--brand-300);
+}
+
+.showcase-tab.is-on {
+  background: var(--brand-700);
+  border-color: var(--brand-700);
+  color: #fff;
+}
+
+/* Focus has to survive the selected state — the tabs are reachable by arrow
+   key, and the ring is the only thing telling a keyboard user where they are. */
+.showcase-tab:focus-visible {
+  outline: 2px solid var(--brand-600);
+  outline-offset: 2px;
+}
+
+.showcase-tab.is-on:focus-visible {
+  outline-color: #fff;
+}
+
+.showcase-tag {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.showcase-tab.is-on .showcase-tag {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.showcase-label {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.showcase-frame {
+  margin: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  background: #fff;
+  box-shadow: 0 18px 44px rgba(11, 42, 30, 0.12);
+}
+
+.showcase-frame img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.showcase-frame figcaption {
+  padding: 16px 22px;
+  border-top: 1px solid var(--rule);
+  font-size: 15px;
+  color: var(--text-secondary);
+  background: var(--surface);
+}
+
+/* ---- Eight-card feature grid ------------------------------------------- */
+
+.feat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 26px 24px;
+}
+
+.feat {
+  display: flex;
+  flex-direction: column;
+}
+
+.feat-fig {
+  margin: 0 0 16px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  background: var(--ink-50);
+  aspect-ratio: 16 / 10;
+}
+
+.feat-fig img {
+  width: 100%;
+  height: 100%;
+  /* `cover`, anchored top-left: these are crops of the running app, and a
+     screen's identity is in its heading and first rows. A centred crop would
+     frame the empty middle of a table. */
+  object-fit: cover;
+  object-position: left top;
+}
+
+/* The phone shot is portrait — cropping it to 16:10 would leave a slice of
+   status bar. It sits inside the frame instead. */
+.feat-fig.is-contain {
+  display: grid;
+  place-items: center;
+  background: linear-gradient(140deg, var(--brand-50), var(--ink-50));
+}
+
+.feat-fig.is-contain img {
+  width: auto;
+  height: 100%;
+  object-fit: contain;
+}
+
+.feat h3 {
+  font-size: 17.5px;
+  font-weight: 700;
+  letter-spacing: -0.012em;
+}
+
+.feat p {
+  margin-top: 8px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+/* ---- Price band --------------------------------------------------------- */
+
+.price-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 48px;
+  align-items: center;
+  padding: 44px;
+  border-radius: 18px;
+  border: 1px solid var(--brand-100);
+  background: linear-gradient(135deg, var(--brand-50), #ffffff 65%);
+}
+
+.price-card h2 {
+  font-size: clamp(30px, 3.4vw, 42px);
+  font-weight: 700;
+  margin-top: 14px;
+}
+
+.price-card > div > p {
+  margin-top: 16px;
+  font-size: 16.5px;
+  color: var(--text-secondary);
+  max-width: 52ch;
+}
+
+.price-side .hero-cta {
+  margin-top: 0;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* ---- Responsive --------------------------------------------------------- */
+
+@media (max-width: 1000px) {
+  .feat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .what-grid {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+
+  /* The hero screenshot stops bleeding off the edge on a phone: at 390px a
+     90px overhang is a quarter of the viewport, and the app inside is
+     unreadable at any width there anyway — it earns its place by being a
+     picture of real software, not by being readable. */
+  .hero-fig img {
+    width: 100%;
+    box-shadow: 0 14px 30px rgba(4, 30, 20, 0.28);
+  }
+
+  .price-card {
+    grid-template-columns: 1fr;
+    gap: 26px;
+    padding: 28px 22px;
+  }
+
+  .showcase-tabs {
+    /* Scrolls sideways rather than wrapping into three ragged rows. */
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+
+  .showcase-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .showcase-tab {
+    flex: none;
+  }
+
+  .showcase-frame figcaption {
+    padding: 13px 16px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 620px) {
+  .feat-grid {
+    grid-template-columns: 1fr;
+    gap: 22px;
   }
 }
