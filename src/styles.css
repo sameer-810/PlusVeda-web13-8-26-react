@@ -32,6 +32,7 @@
   --brand-800: #0a5730;
   --brand-700: #0c7942;
   --brand-600: #10a058;
+  --brand-300: #76dba5;
   --brand-100: #d6f5e7;
   --brand-50: #eefbf5;
 
@@ -330,9 +331,15 @@ img {
   padding: 66px 0 0;
 }
 
+/* The reference sets its headline at 48px / weight 500 / -1.2px tracking /
+   1.0 leading. Copied: the light weight at a large size is most of why that
+   page reads as calm rather than shouted, and a 700-weight headline in Outfit
+   at this size is noticeably heavier than the one being matched. */
 .hero h1 {
-  font-size: clamp(38px, 4.7vw, 58px);
-  font-weight: 700;
+  font-size: clamp(34px, 4.1vw, 50px);
+  font-weight: 500;
+  letter-spacing: -0.026em;
+  line-height: 1.06;
   margin-top: 22px;
 }
 
@@ -1099,33 +1106,6 @@ img {
   .close-cta {
     padding-top: 60px;
   }
-}/* ---- Scroll reveal ------------------------------------------------------
-   Armed by useReveal() at runtime, never in the markup — see the hook for why
-   the page must render visible by default. Transform and opacity only, so the
-   whole thing stays off the main thread. */
-
-.reveal-armed {
-  opacity: 0;
-  transform: translateY(14px);
-}
-
-.reveal-in {
-  opacity: 1;
-  transform: none;
-  transition:
-    opacity 520ms cubic-bezier(0.22, 0.61, 0.36, 1),
-    transform 520ms cubic-bezier(0.22, 0.61, 0.36, 1);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  /* Belt and braces: the hook already bails out, but if anything ever adds
-     these classes by another route they must still be inert. */
-  .reveal-armed,
-  .reveal-in {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
 }
 
 /* =========================================================================
@@ -1487,5 +1467,283 @@ img {
   .feat-grid {
     grid-template-columns: 1fr;
     gap: 22px;
+  }
+}
+
+/* =========================================================================
+   HOVER AND MOTION
+   =========================================================================
+   Copied from the reference site's actual interaction vocabulary rather than
+   invented. It is a Tailwind build, so its behaviour is legible straight off
+   the class attributes; these were the ones it uses, by frequency:
+
+     hover:-translate-y-2      (8x)   cards lift on hover
+     hover:shadow-lg / -xl     (9x)   and the shadow deepens under them
+     hover:border-teal-500     (11x)  the border takes the brand colour
+     group-hover:text-teal-600 (30x)  the card TITLE turns brand when the
+                                      whole card is hovered, not just the text
+     group-hover:scale-125/105 (22x)  and the image inside grows slightly
+     transition-all duration-300      on essentially all of it
+
+   The last two are what make it feel like one object responding rather than
+   four separate things. Everything here is transform / opacity / colour, so
+   it composites off the main thread; nothing animates width, height or
+   position, which would force layout on every frame.
+   ========================================================================= */
+
+/* ---- Hero badge ---------------------------------------------------------
+   The reference's rounded pill above the headline, dot and all. */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 16px 7px 13px;
+  border-radius: 9999px;
+  font-size: 13.5px;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(4px);
+}
+
+.badge::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #7ff0bd;
+  flex: none;
+}
+
+/* ---- The arrow on the primary CTA -------------------------------------- */
+
+.btn-arrow {
+  display: inline-block;
+  transition: transform 0.25s ease;
+  will-change: transform;
+}
+
+.btn:hover .btn-arrow {
+  transform: translateX(4px);
+}
+
+/* ---- Buttons ------------------------------------------------------------
+   A shadow and a small lift. Deliberately NOT scale(): the reference scales
+   its buttons, but scaling text renders it at a fractional size for the
+   duration of the transition and it visibly softens. Translating does not. */
+.btn {
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(16, 160, 88, 0.28);
+}
+
+.btn-ghost:hover {
+  transform: translateY(-2px);
+}
+
+.hero .btn-primary:hover {
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.22);
+}
+
+.btn:active {
+  transform: translateY(0);
+  transition-duration: 0.05s;
+}
+
+/* ---- Feature cards ------------------------------------------------------
+   The signature move: the whole card lifts, its frame takes the brand colour,
+   the photograph inside grows a little, and the title turns green. Four
+   properties, one gesture. */
+
+.feat {
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
+}
+
+.feat-fig {
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.feat-fig img {
+  transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: transform;
+}
+
+.feat h3 {
+  transition: color 0.3s ease;
+}
+
+.feat:hover {
+  transform: translateY(-8px);
+}
+
+.feat:hover .feat-fig {
+  border-color: var(--brand-300);
+  box-shadow: 0 14px 30px rgba(11, 42, 30, 0.16);
+}
+
+.feat:hover .feat-fig img {
+  transform: scale(1.06);
+}
+
+.feat:hover h3 {
+  color: var(--brand-700);
+}
+
+/* Keyboard users get the same feedback. The card is not focusable itself, so
+   this fires when anything inside it takes focus. */
+.feat:focus-within {
+  transform: translateY(-8px);
+}
+
+.feat:focus-within .feat-fig {
+  border-color: var(--brand-300);
+}
+
+/* ---- Showcase tabs and frame ------------------------------------------- */
+
+.showcase-tab {
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.showcase-tab:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(11, 42, 30, 0.1);
+}
+
+.showcase-frame {
+  transition: box-shadow 0.3s ease;
+}
+
+.showcase-frame:hover {
+  box-shadow: 0 24px 56px rgba(11, 42, 30, 0.18);
+}
+
+/* ---- The "what is it" screenshot and the hero shot --------------------- */
+
+.what-fig,
+.hero-fig img {
+  transition:
+    transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 0.4s ease;
+}
+
+.what-fig:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 26px 56px rgba(11, 42, 30, 0.18);
+}
+
+/* ---- Ledger cells and comparison rows ----------------------------------
+   Quieter: these are read, not clicked, so they get a background tint and
+   nothing that moves. */
+
+.ledger-cell,
+.compare-row {
+  transition: background 0.25s ease;
+}
+
+.ledger-cell:hover,
+.compare-row:hover {
+  background: var(--brand-50);
+}
+
+/* ---- FAQ ---------------------------------------------------------------- */
+
+.faq summary {
+  transition: color 0.2s ease;
+}
+
+.faq summary:hover {
+  color: var(--brand-700);
+}
+
+/* ---- Footer and nav links ----------------------------------------------- */
+
+.footer-col a {
+  transition: color 0.2s ease;
+}
+
+/* =========================================================================
+   SCROLL REVEAL
+   =========================================================================
+   The reference animates its sections in with Framer Motion — opacity 0 to 1
+   and a small upward translate, settling to `transform: none`. This is the
+   same effect in CSS, driven by the IntersectionObserver in useReveal.ts.
+
+   Two differences from a naive implementation, both deliberate:
+
+   1. The travel is 18px, not 40. Long entrance animations read as slow on the
+      second scroll past, and this page is eleven phone screens long.
+   2. Cards in a grid are STAGGERED. Eight cards fading in together is one
+      event; eight cards arriving 60ms apart reads as the grid assembling, and
+      it is the single biggest difference between this and a stock fade-in.
+      The delay is capped so nothing at the end of a long grid is left waiting.
+   ========================================================================= */
+
+.reveal-armed {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.reveal-in {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.55s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* The stagger. Set as a custom property by useReveal so the delay survives
+   the class swap, and applied only on the way in — the armed state must not
+   be delayed or the element flashes at full opacity first. */
+.reveal-in {
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+/*
+ * MOTION OFF.
+ *
+ * useReveal already bails out entirely under prefers-reduced-motion, so the
+ * reveal is handled. This covers the hover transforms, which it does not
+ * touch — vestibular triggers are movement, and a grid of cards jumping 8px
+ * under the pointer is movement. Colour and shadow feedback survives, so the
+ * page still responds; it just stops moving.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .feat:hover,
+  .feat:focus-within,
+  .btn:hover,
+  .showcase-tab:hover,
+  .what-fig:hover {
+    transform: none;
+  }
+
+  .feat:hover .feat-fig img {
+    transform: none;
+  }
+
+  .btn:hover .btn-arrow {
+    transform: none;
+  }
+
+  .reveal-in {
+    transition: none;
   }
 }

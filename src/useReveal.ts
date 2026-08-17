@@ -38,6 +38,34 @@ export function useReveal() {
     // Arm them only now that we know we can also disarm them.
     targets.forEach((el) => el.classList.add("reveal-armed"));
 
+    /**
+     * Stagger, for elements that arrive as a group.
+     *
+     * Eight feature cards fading in together is one event and reads as a page
+     * loading late. The same eight arriving 60ms apart reads as the grid
+     * assembling itself, and it is the biggest single difference between this
+     * and a stock fade-in — the reference site gets the same effect out of
+     * Framer Motion's `staggerChildren`.
+     *
+     * The index is per-parent, not global, so each grid counts from zero
+     * rather than inheriting an offset from whatever came before it. The cap
+     * matters: without it the last card of a long grid waits half a second
+     * after the first, which on a fast scroll means it is still animating
+     * when it has already left the screen.
+     */
+    const STEP = 60;
+    const MAX = 240;
+    const seen = new Map<Element, number>();
+    for (const el of targets) {
+      const parent = el.parentElement;
+      if (!parent) continue;
+      const i = seen.get(parent) ?? 0;
+      seen.set(parent, i + 1);
+      if (i > 0) {
+        el.style.setProperty("--reveal-delay", `${Math.min(i * STEP, MAX)}ms`);
+      }
+    }
+
     const obs = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {

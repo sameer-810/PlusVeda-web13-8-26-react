@@ -100,6 +100,12 @@ function Cta({ note, pill }: { note?: string; pill?: boolean }) {
       <div className="hero-cta">
         <a className={`btn btn-primary${pill ? " btn-pill" : ""}`} href={signupHref}>
           Start free
+          {/* Slides forward on hover, as the reference's does. Decorative, so
+              it is hidden from screen readers — the link already says where it
+              goes. */}
+          <span className="btn-arrow" aria-hidden="true">
+            &rarr;
+          </span>
         </a>
         <a className={`btn btn-ghost${pill ? " btn-pill" : ""}`} href={contactHref()}>
           {contactLabel}
@@ -308,16 +314,29 @@ export default function App() {
       <section className="hero">
         <div className="wrap hero-grid">
           <div className="hero-copy">
-            <p className="label">For medical stores in India</p>
+            {/* The reference opens with a rounded badge carrying a dot, above
+                the headline. Same device, but it cannot carry their claim —
+                theirs reads "Trusted by 4500+ pharmacies" and we have none
+                yet, so it carries the offer instead. */}
+            <p className="badge">Free to start &middot; for medical stores in India</p>
+            {/*
+              Headline rebuilt to the reference's pattern on request: a plain
+              category phrase — the words a chemist would actually type into
+              Google — closed by a highlighted clause carrying the one thing
+              that is ours. Theirs is "…Software that is Truly Affordable".
+
+              This is a real trade. "Stop typing purchase bills. Photograph
+              them." was sharper and more memorable; this version says what the
+              product IS before it says what is clever about it, which is
+              better for search and for a visitor who has never heard of us.
+            */}
             <h1>
-              Stop typing purchase bills.
-              <br />
-              <span className="accent">Photograph them.</span>
+              GST billing &amp; inventory software for Indian pharmacies{" "}
+              <span className="accent">that reads your purchase bills</span>
             </h1>
             <p className="hero-sub">
-              Billing, stock, batches, expiry and GST for an Indian medical
-              store — with every line of your distributor's invoice read off a
-              photograph.
+              Photograph your distributor's invoice and every line comes back —
+              batch, expiry, MRP, rate and GST — as stock you can sell.
             </p>
             <Cta pill note="Free to start · no card needed · browser, Android and the counter PC" />
           </div>
