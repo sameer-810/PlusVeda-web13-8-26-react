@@ -18,7 +18,13 @@
       name="description"
       content="Photograph your distributor's invoice and Plusveda reads every line — batch, expiry, MRP, rate and GST. Plus GST billing, batch-wise stock and a reorder list that writes itself. Free to start."
     />
-    <link rel="canonical" href="https://plusveda.app/" />
+    <!--
+      %SITE_ORIGIN% is substituted at build time from the single constant in
+      vite.config.ts. Do not hardcode a domain into this file: it appears four
+      times below, and the last time they were written out by hand they went
+      out of step with a domain that may not even be owned.
+    -->
+    <link rel="canonical" href="%SITE_ORIGIN%/" />
     <meta name="theme-color" content="#10A058" />
 
     <meta property="og:type" content="website" />
@@ -34,11 +40,27 @@
       property="og:description"
       content="Plusveda reads your distributor's invoice — every line, with batch, expiry, MRP and GST. Billing, stock and expiry for Indian medical stores."
     />
-    <meta property="og:image" content="/og.png" />
+    <!--
+      Absolute, and not negotiable. Scrapers fetch these from their own servers
+      with no page context, so a relative "/og.png" resolves against nothing:
+      WhatsApp still draws the card, with a grey hole where the picture goes.
+      og:url was missing entirely, which leaves the scraper to guess the
+      canonical address of what it just fetched.
+
+      public/og.png is generated — `npm run og` — from the same screenshot and
+      the same og:title as the page. Re-run it if either changes.
+    -->
+    <meta property="og:url" content="%SITE_ORIGIN%/" />
+    <meta property="og:image" content="%SITE_ORIGIN%/og.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Plusveda — GST billing and inventory software for Indian pharmacies, showing the dashboard"
+    />
     <meta property="og:locale" content="en_IN" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="%SITE_ORIGIN%/og.png" />
 
     <link rel="icon" type="image/png" href="/icon.png" />
 
@@ -71,7 +93,7 @@
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "Android, Windows, Web",
         "description": "GST billing and batch-wise stock software for Indian medical stores and pharmacies.",
-        "url": "https://plusveda.app/",
+        "url": "%SITE_ORIGIN%/",
         "author": {
           "@type": "Organization",
           "name": "FiveM Infotech"

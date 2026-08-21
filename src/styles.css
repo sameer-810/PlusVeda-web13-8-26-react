@@ -996,9 +996,13 @@ img {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }  .hero-fig {
-    padding: 0 0 28px;
   }
+}
+
+/* Was nested inside the reduced-motion query above — a merge slip, so the hero
+   figure's spacing only applied to visitors who ask for reduced motion. */
+.hero-fig {
+  padding: 0 0 28px;
 }
 
 @media (max-width: 640px) {
