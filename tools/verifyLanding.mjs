@@ -90,6 +90,107 @@ rec(
   secHref,
 );
 
+/* ---- The price list ------------------------------------------------------
+   The prices exist in two places and cannot be reduced to one: the cards are
+   rendered by React from src/config.ts, and the schema.org offers are static
+   in index.html because Google and WhatsApp's scraper do not run the bundle.
+   Two copies of a number a customer pays is exactly the kind of thing that
+   goes out of step in a hurry and is noticed by the customer, not by us.
+
+   So config.ts is the source of truth and both renderings are asserted
+   against it: what the card says, and what the crawler is told. */
+
+const planSrc = fs.readFileSync(path.resolve("src/config.ts"), "utf8");
+const PLANS = [
+  ...planSrc.matchAll(
+    /name:\s*"([^"]+)",\s*\n\s*months:\s*(\d+),\s*\n\s*total:\s*(\d+),/g,
+  ),
+].map(([, name, months, total]) => ({
+  name,
+  months: Number(months),
+  total: Number(total),
+  perMonth: Math.round(Number(total) / Number(months)),
+}));
+
+rec(
+  "Price list parsed from config",
+  PLANS.length >= 1,
+  PLANS.map((p) => `${p.name}=₹${p.total}`).join(", ") || "NONE FOUND",
+);
+
+const cards = await page.$$eval(".plan", (els) =>
+  els.map((el) => ({
+    name: el.querySelector("h3")?.textContent?.trim() || "",
+    rate: el.querySelector(".plan-num")?.textContent?.trim() || "",
+    lines: el.querySelector(".plan-lines")?.textContent || "",
+    cta: el.querySelector("a.plan-cta")?.getAttribute("href") || "",
+  })),
+);
+
+rec(
+  "A card per plan",
+  cards.length === PLANS.length,
+  `${cards.length} cards for ${PLANS.length} plans`,
+);
+
+/* Both figures on the card: the per-month rate it leads with, and the total
+   that actually leaves the account. A card that leads with ₹225 and hides
+   ₹2,700 is the trick this page is meant not to play. */
+const wrongCard = PLANS.map((p, i) => {
+  const c = cards[i];
+  if (!c) return `${p.name}: no card`;
+  if (c.name !== p.name) return `card ${i}: "${c.name}" != "${p.name}"`;
+  const rate = Number(c.rate.replace(/[^\d]/g, ""));
+  if (rate !== p.perMonth) return `${p.name}: shows ₹${rate}/mo, want ₹${p.perMonth}`;
+  if (!c.lines.replace(/[^\d]/g, "").includes(String(p.total)))
+    return `${p.name}: total ₹${p.total} not on the card`;
+  return null;
+}).filter(Boolean);
+rec(
+  "Cards match the price list",
+  wrongCard.length === 0,
+  wrongCard.length ? wrongCard.join("; ") : "rate and total correct on every card",
+);
+
+/* There is no checkout in the product — a plan is switched on by a person —
+   so a card whose button goes nowhere is an unsellable plan. */
+const deadCta = cards.filter((c) => !/^(https:\/\/wa\.me\/|mailto:)/.test(c.cta));
+rec(
+  "Every plan card reaches a person",
+  deadCta.length === 0,
+  deadCta.length ? deadCta.map((c) => c.name).join(", ") : `${cards.length} live CTAs`,
+);
+
+/* And the crawler is told the same prices as the visitor. */
+const ldPrices = await page.$$eval(
+  'script[type="application/ld+json"]',
+  (els) => {
+    const out = [];
+    const walk = (n) => {
+      if (Array.isArray(n)) return n.forEach(walk);
+      if (n && typeof n === "object") {
+        if (n["@type"] === "Offer" && n.price) out.push(Number(n.price));
+        Object.values(n).forEach(walk);
+      }
+    };
+    for (const el of els) {
+      try {
+        walk(JSON.parse(el.textContent || "{}"));
+      } catch {
+        out.push(NaN);
+      }
+    }
+    return out;
+  },
+);
+const wantPrices = PLANS.map((p) => p.total).sort((a, b) => a - b);
+const gotPrices = [...new Set(ldPrices)].sort((a, b) => a - b);
+rec(
+  "Structured data quotes the same prices",
+  JSON.stringify(wantPrices) === JSON.stringify(gotPrices),
+  `schema says [${gotPrices}] · config says [${wantPrices}]`,
+);
+
 /* Plusveda has no live customers. A chemist who catches an invented one will
    tell the other chemists, so this stays asserted rather than trusted. */
 const body = await page.locator("body").innerText();
@@ -264,6 +365,18 @@ rec("No horizontal overflow", overflow <= 1, `${overflow}px past the viewport`);
  *   showcase, an eight-card grid and a price band. On a phone the eight cards
  *   stack into a single column, and that one change is most of the increase.
  *
+ *   12 -> 13.5: the owner set prices and asked for them sold the way Hostinger
+ *   sells a term. The price band was one card saying "free to start"; it is now
+ *   a real section — four plan cards, a note on renewal, and the twelve things
+ *   every plan carries. That is +1,080px on a phone, and it is the band the
+ *   whole page exists to deliver a visitor to.
+ *
+ *   The cheap savings were taken first, not after the number was raised: on a
+ *   phone the four cards are a swipe row rather than a stack (-530px, and it is
+ *   also what the reference does there), and the includes list runs at tighter
+ *   leading (-70px). Stacked and untightened this same section would have put
+ *   the page at 13.6 screens on its own.
+ *
  * Everything cheap has already been spent: card rhythm, section padding, and
  * both the photo and wave heights are shorter on a phone than on a desktop.
  * Cutting real content to defend a threshold chosen under a different brief
@@ -277,7 +390,7 @@ const screens =
   (await p2.evaluate(() => document.body.scrollHeight)) / 844;
 rec(
   "Phone page stays short",
-  screens <= 12,
+  screens <= 13.5,
   `${screens.toFixed(1)} screens`,
 );
 

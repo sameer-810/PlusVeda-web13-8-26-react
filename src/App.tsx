@@ -24,7 +24,9 @@
  *   - where they run customer testimonials we say plainly that we are taking
  *     on our first pharmacies, because inventing a quote is the one mistake a
  *     chemist will tell every other chemist about;
- *   - the price band says free to start, because no price has been set.
+ *   - the price band carries the owner's real price list (set 2026-09-01) and
+ *     the term discounts are measured against our own 1-month plan, which is
+ *     sold on the same row — not against an invented "regular price".
  *
  * THE IMAGES ARE THE POINT
  * ------------------------
@@ -45,8 +47,13 @@ import { Wave } from "./Wave";
 import { Showcase, type Panel } from "./Showcase";
 import { useReveal } from "./useReveal";
 import {
+  cheapestPerMonth,
   contactHref,
   contactLabel,
+  inr,
+  planHref,
+  planMath,
+  plans,
   signinHref,
   signupHref,
   site,
@@ -127,7 +134,10 @@ const LEDGER = [
   { figure: "2,00,000+", text: "medicines already in the catalogue" },
   { figure: "FEFO", text: "nearest expiry sold first, automatically" },
   { figure: "CGST · SGST · IGST", text: "worked out per line, on every bill" },
-  { figure: "₹0", text: "to start — no card, no year up front" },
+  {
+    figure: `${inr(cheapestPerMonth)}/mo`,
+    text: "on the 12-month plan — free to try first",
+  },
 ];
 
 /** The tabbed showcase. Real screens, real data, no mock-ups. */
@@ -239,6 +249,155 @@ const FEATURES = [
 ];
 
 /**
+ * What every plan carries. There is one product and one tier, so the cards
+ * cannot differentiate on features the way a hosting company's do — which is
+ * why this list sits ONCE under the grid instead of being repeated four times
+ * down four columns of identical ticks.
+ *
+ * Everything here is shipped and testable in the app today. Nothing goes on
+ * this list that a chemist could not find in the software the same afternoon.
+ */
+const INCLUDED = [
+  "Unlimited bills and unlimited medicines",
+  "GST billing — CGST, SGST and IGST per line",
+  "Batch and expiry tracking, FEFO on every sale",
+  "Photograph the purchase bill, get sellable stock",
+  "Two lakh medicines already in the catalogue",
+  "Barcode scanning at the counter and on inwarding",
+  "Offline billing that syncs when the line comes back",
+  "ShortBook reorder list and purchase orders",
+  "Schedule H / H1 prescription register",
+  "Reports and registers to Excel and PDF",
+  "Staff logins with per-screen permissions",
+  "Counter PC, Android phone and browser — one login",
+];
+
+/**
+ * The price band, built the way the owner asked — the way Hostinger sells a
+ * term rather than a tier.
+ *
+ * Hostinger has one product too. What they actually sell on that page is the
+ * LENGTH of the commitment, and four devices do all the work:
+ *
+ *   1. the per-month figure is the headline, never the total;
+ *   2. the total is still shown, plainly, as "what leaves your account today",
+ *      because a chemist who discovers it at checkout does not come back;
+ *   3. every card is anchored against the same undiscounted month-to-month
+ *      rate, in per cent AND in rupees;
+ *   4. one card is raised and named, so there is a default to take.
+ *
+ * All four are here. What is NOT copied is the pressure — no countdown clock,
+ * no "renews at ₹4,000", no fake struck-out list price. The anchor on these
+ * cards is our own 1-month plan, which is sold on this very page: it is the
+ * one strike-through that is literally true.
+ *
+ * Every figure below is derived in config.ts from the term and the total, so
+ * the cards cannot fall out of step with the price list.
+ */
+function Pricing() {
+  return (
+    <>
+      <div className="plans">
+        {plans.map((plan) => {
+          const { perMonth, listTotal, saves, savePct } = planMath(plan);
+          const term = `${plan.months} month${plan.months === 1 ? "" : "s"}`;
+
+          /* Three rows on every card, discounted or not, so four cards read as
+             one table across rather than four ragged blocks.
+             The class is carried per row rather than taken from its POSITION:
+             styling "row two" as the struck-through anchor put a line through
+             "Covers — 1 month" on the one card that has nothing to strike. */
+          const rows: [string, string, string?][] =
+            saves > 0
+              ? [
+                  ["You pay", `${inr(plan.total)} once`],
+                  ["Instead of", inr(listTotal), "is-anchor"],
+                  ["You save", inr(saves), "is-save"],
+                ]
+              : [
+                  ["You pay", `${inr(plan.total)} once`],
+                  ["Covers", term],
+                  ["Tied in for", "Nothing"],
+                ];
+
+          return (
+            <article
+              className={`plan${plan.featured ? " is-featured" : ""}`}
+              key={plan.id}
+              data-reveal
+            >
+              {plan.featured ? <p className="plan-ribbon">Best value</p> : null}
+
+              <div className="plan-head">
+                <h3>{plan.name}</h3>
+                {savePct > 0 ? (
+                  <span className="plan-save">Save {savePct}%</span>
+                ) : null}
+              </div>
+              <p className="plan-blurb">{plan.blurb}</p>
+
+              {/* The one big number on the card, in the page's tabular mono —
+                  the same face the app sets a rate in. */}
+              <p className="plan-rate">
+                <span className="plan-cur">₹</span>
+                <span className="plan-num">
+                  {perMonth.toLocaleString("en-IN")}
+                </span>
+                <span className="plan-per">/month</span>
+              </p>
+
+              <dl className="plan-lines">
+                {rows.map(([k, v, cls]) => (
+                  <div className={cls} key={k}>
+                    <dt>{k}</dt>
+                    <dd>{v}</dd>
+                  </div>
+                ))}
+              </dl>
+
+              {/* There is no card-payment page in the product: a plan is
+                  switched on by a person. So this goes to WhatsApp (or email
+                  until the number is set) with the plan already named. */}
+              <a
+                className={`btn btn-pill plan-cta ${
+                  plan.featured ? "btn-primary" : "btn-ghost"
+                }`}
+                href={planHref(plan)}
+              >
+                Get {term}
+              </a>
+            </article>
+          );
+        })}
+      </div>
+
+      {/* Rendered always, shown only on phones, where the four cards become a
+          swipe row. The peeking card next to it is the real affordance; this
+          is for the reader who does not notice it. */}
+      <p className="plans-swipe" aria-hidden="true">
+        Swipe for the other plans &rarr;
+      </p>
+
+      <p className="plans-note">
+        Prices are per medical store, in rupees. Nothing renews on its own and
+        no card is stored — we tell you before a term ends.{" "}
+        <a href={signupHref}>Start free</a> and put one real purchase bill
+        through it before you pay for anything.
+      </p>
+
+      <div className="includes" data-reveal>
+        <p className="label">In every plan</p>
+        <ul>
+          {INCLUDED.map((i) => (
+            <li key={i}>{i}</li>
+          ))}
+        </ul>
+      </div>
+    </>
+  );
+}
+
+/**
  * Framed as questions about the WORK, not claims about named competitors. Each
  * "usually" is something a chemist can check against his own software in a
  * minute, and none of it goes stale when a rival ships an update.
@@ -249,11 +408,25 @@ const COMPARISONS = [
   { q: "When you're out of stock", usual: "Send them elsewhere", ours: "Same-salt substitute, one tap" },
   { q: "Where the reorder list comes from", usual: "A number typed in once", ours: "What you actually sold" },
   { q: "What the assistant can see", usual: "Everything", ours: "Exactly what you choose" },
-  { q: "Cost to start", usual: "A year, up front", ours: "Nothing" },
+  {
+    q: "Paying for it",
+    usual: "A year's licence, up front",
+    ours: `Free to try, then from ${inr(cheapestPerMonth)} a month`,
+  },
 ];
 
 /** Trust questions only — the one place text genuinely beats a picture. */
 const FAQS = [
+  {
+    q: "What does it cost?",
+    a: `From ${inr(
+      cheapestPerMonth,
+    )} a month on the 12-month plan, down from ₹1,000 a month if you buy a month at a time. Every plan is the same software — there is no cheaper version with features taken out, and nothing is charged per bill, per user or per medicine. The four plans are on this page.`,
+  },
+  {
+    q: "What happens when my plan runs out?",
+    a: "We tell you before it does, and you decide. No card is stored, so nothing can renew or charge itself. Your data stays yours either way — reports and registers export to Excel and PDF whenever you want them.",
+  },
   {
     q: "Do I have to type in all my medicines first?",
     a: "No. Over two lakh medicines ship with it — brand, salt, manufacturer and pack. You search for what you stock and add it. Your rates, batches and quantities are yours; the medicine details are already there.",
@@ -287,6 +460,7 @@ export default function App() {
           <nav className="nav-links">
             <a href="#what">What it does</a>
             <a href="#features">Features</a>
+            <a href="#price">Pricing</a>
             <a href="#compare">Compare</a>
             <a href="#faq">Questions</a>
           </nav>
@@ -318,7 +492,9 @@ export default function App() {
                 the headline. Same device, but it cannot carry their claim —
                 theirs reads "Trusted by 4500+ pharmacies" and we have none
                 yet, so it carries the offer instead. */}
-            <p className="badge">Free to start &middot; for medical stores in India</p>
+            <p className="badge">
+              Free to try &middot; then from {inr(cheapestPerMonth)} a month
+            </p>
             {/*
               Headline rebuilt to the reference's pattern on request: a plain
               category phrase — the words a chemist would actually type into
@@ -460,23 +636,21 @@ export default function App() {
         </div>
       </section>
 
-      {/* PRICE. The reference's price band, told honestly. */}
+      {/* PRICE. Sold by the term, Hostinger-style — see Pricing() above. */}
       <section className="section section-sunken" id="price">
         <div className="wrap">
-          <div className="price-card" data-reveal>
+          <div className="section-head is-centred">
             <div>
-              <p className="label">Best value</p>
-              <h2>Free to start</h2>
-              <p>
-                No card, no annual licence up front, and no per-bill charge.
-                Put one real purchase bill through it and decide from there.
-                When we do set a price you will hear it from us first.
+              <p className="label">Pricing</p>
+              <h2>One price. The longer you take, the less it costs.</h2>
+              <p className="section-sub">
+                Every plan is the whole software — the same features, the same
+                support, no charge per bill, per user or per medicine. The only
+                thing that changes is how long you pay for at a time.
               </p>
             </div>
-            <div className="price-side">
-              <Cta pill note="Prefer to talk first? We'd rather that too." />
-            </div>
           </div>
+          <Pricing />
         </div>
       </section>
 
@@ -571,7 +745,10 @@ export default function App() {
           <div>
             <p className="label">Start today</p>
             <h2>Run your shop with confidence</h2>
-            <p>Nothing to install, and nothing to pay.</p>
+            <p>
+              Nothing to install. Free to try, then from{" "}
+              {inr(cheapestPerMonth)} a month.
+            </p>
           </div>
           <div>
             <Cta pill note="Prefer to talk first? We'd rather that too." />
@@ -594,6 +771,7 @@ export default function App() {
                 <h4>Product</h4>
                 <a href="#what">What it does</a>
                 <a href="#features">Features</a>
+                <a href="#price">Pricing</a>
                 <a href="#compare">Compare</a>
                 <a href="#faq">Questions</a>
                 {site.playStoreUrl ? (

@@ -74,6 +74,101 @@ export const site = {
   playStoreUrl: "",
 };
 
+/* ============================================================================
+   THE PRICE LIST
+   ============================================================================
+   Set by the owner on 2026-09-01. These four numbers are the only prices
+   published anywhere on this page — the cards, the ledger strip, the hero
+   badge, the comparison table and the JSON-LD offers in index.html all read
+   from here, so a price change is one edit in one file.
+
+   `total` is what the pharmacy pays ONCE for the whole term. Everything else
+   shown on a card — the per-month figure, the discount badge, the rupees
+   saved — is DERIVED from `total`, `months` and `monthlyListPrice` below.
+   Never hardcode a derived number into the JSX: a card that says "save 78%"
+   next to a total that no longer supports it is worse than no card.
+
+   The owner's own words for each plan are kept verbatim in `name`, because
+   that is what he will look for when he checks this page.
+
+   ⚠ TODO(owner): confirm whether these are inclusive of GST. The page
+   currently says neither, which is the only honest option until you say.
+   ========================================================================= */
+
+/**
+ * The undiscounted rate — one month, bought one month at a time. Every
+ * discount on the page is measured against this, so it is also the price of
+ * the 1-month plan and the two must never drift apart.
+ */
+export const monthlyListPrice = 1000;
+
+export type Plan = {
+  id: string;
+  /** The owner's wording, verbatim. */
+  name: string;
+  months: number;
+  /** Rupees, paid once, for the whole term. */
+  total: number;
+  /** The one card that is raised and carries the ribbon. */
+  featured?: boolean;
+  /** One line under the term, in the card. */
+  blurb: string;
+};
+
+export const plans: Plan[] = [
+  {
+    id: "12m",
+    name: "12 Month Plan",
+    months: 12,
+    total: 2700,
+    featured: true,
+    blurb: "A full year, at the lowest rate we sell.",
+  },
+  {
+    id: "6m",
+    name: "6 Month Plan",
+    months: 6,
+    total: 1800,
+    blurb: "Half a year — the usual choice after a trial.",
+  },
+  {
+    id: "3m",
+    name: "3 Month Plan",
+    months: 3,
+    total: 1275,
+    blurb: "A quarter at a time, if you want to be sure first.",
+  },
+  {
+    id: "1m",
+    name: "1 Month Plan",
+    months: 1,
+    total: 1000,
+    blurb: "Month to month. Stop whenever you like.",
+  },
+];
+
+/** ₹1,275 — Indian digit grouping, which is not what the default gives you. */
+export function inr(amount: number): string {
+  return `₹${amount.toLocaleString("en-IN")}`;
+}
+
+/**
+ * Everything a price card shows beyond the term and the total. Derived rather
+ * than typed out so the four cards can never disagree with each other.
+ */
+export function planMath(plan: Plan) {
+  const perMonth = Math.round(plan.total / plan.months);
+  const listTotal = monthlyListPrice * plan.months;
+  const saves = listTotal - plan.total;
+  const savePct = Math.round((1 - perMonth / monthlyListPrice) * 100);
+  return { perMonth, listTotal, saves, savePct };
+}
+
+/** The cheapest per-month figure on the list — the number the hero quotes. */
+export const cheapestPerMonth = Math.min(
+  ...plans.map((p) => planMath(p).perMonth),
+);
+
 /**
  * Digits only, whatever was pasted. A number copied off a phone arrives as
  * "+91 98765 43210", and wa.me silently fails on every character that isn't a
@@ -88,16 +183,35 @@ const waDigits = site.whatsappNumber.replace(/\D/g, "");
    login is ever wanted, create a throwaway account for it — never reuse the
    reviewer's. */
 
-/** WhatsApp deep link, or a mailto fallback while the number is unset. */
-export function contactHref(): string {
+/**
+ * WhatsApp deep link, or a mailto fallback while the number is unset.
+ *
+ * Takes the message so a price card can say which plan it came from. There is
+ * no card-payment page in the product — a plan is activated by a person — so
+ * this link IS the checkout, and arriving with "I want the 12 Month Plan
+ * (₹2,700)" already typed is the whole difference between a lead and a "hi".
+ */
+export function contactHref(
+  message: string = site.whatsappMessage,
+  subject = "Plusveda demo",
+): string {
   if (waDigits) {
-    return `https://wa.me/${waDigits}?text=${encodeURIComponent(
-      site.whatsappMessage,
-    )}`;
+    return `https://wa.me/${waDigits}?text=${encodeURIComponent(message)}`;
   }
   return `mailto:${site.supportEmail}?subject=${encodeURIComponent(
-    "Plusveda demo",
-  )}&body=${encodeURIComponent(site.whatsappMessage)}`;
+    subject,
+  )}&body=${encodeURIComponent(message)}`;
+}
+
+/** The "checkout" link for one plan. */
+export function planHref(plan: Plan): string {
+  return contactHref(
+    `Hi, I run a medical store and I'd like the Plusveda ${plan.name} (${inr(
+      plan.total,
+    )} for ${plan.months} month${plan.months === 1 ? "" : "s"}). ` +
+      `Please tell me how to start.`,
+    `Plusveda — ${plan.name}`,
+  );
 }
 
 /** So the button can honestly say what it will do. */

@@ -891,6 +891,7 @@ img {
     margin-top: 6px;
   }
 
+
   /* Steps read as a short numbered list on a phone, not three stacked panels. */
   .steps {
     gap: 0;
@@ -1383,36 +1384,278 @@ img {
   color: var(--text-secondary);
 }
 
-/* ---- Price band --------------------------------------------------------- */
+/* ---- Price cards --------------------------------------------------------
+   Four terms of the same product, sold the way a hosting company sells one:
+   the per-month figure is the headline and the total is the fine print.
 
-.price-card {
+   Built in this page's own language rather than the reference's. A hosting
+   page stacks gradients, drop shadows and 16px corners on its plan cards; the
+   rest of THIS page is hairline rules, 3px corners, tabular mono figures and
+   one flat green, and a pricing table is the last place to break that — this
+   is the band where the visitor is deciding whether we look serious.
+
+   So: the four cards are one ruled table across, sharing borders like columns
+   in a register. Only the featured card leaves the grid — a green rule, a
+   ribbon and a lift — because a price list needs exactly one default. */
+
+.plans {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
-  gap: 48px;
-  align-items: center;
-  padding: 44px;
-  border-radius: 18px;
-  border: 1px solid var(--brand-100);
-  background: linear-gradient(135deg, var(--brand-50), #ffffff 65%);
-}
-
-.price-card h2 {
-  font-size: clamp(30px, 3.4vw, 42px);
-  font-weight: 700;
-  margin-top: 14px;
-}
-
-.price-card > div > p {
-  margin-top: 16px;
-  font-size: 16.5px;
-  color: var(--text-secondary);
-  max-width: 52ch;
-}
-
-.price-side .hero-cta {
-  margin-top: 0;
-  flex-direction: column;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
   align-items: stretch;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  /* The featured card lifts out of the row; without this its ribbon and
+     shadow are clipped by the shared frame. */
+  overflow: visible;
+}
+
+.plan {
+  display: flex;
+  flex-direction: column;
+  padding: 30px 24px 26px;
+  border-left: 1px solid var(--rule);
+  position: relative;
+  background: var(--surface);
+}
+
+.plan:first-child {
+  border-left: 0;
+}
+
+/* The default. Raised, outlined in the brand green, and the only card whose
+   button is filled — a visitor who does not want to think should be able to
+   take this one without reading the other three. */
+.plan.is-featured {
+  border: 1px solid var(--brand-600);
+  border-radius: var(--radius-lg);
+  margin: -14px 0;
+  padding-top: 40px;
+  padding-bottom: 36px;
+  box-shadow: 0 18px 40px rgba(7, 60, 33, 0.1);
+  z-index: 1;
+}
+
+.plan-ribbon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 6px 0;
+  background: var(--brand-600);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: center;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.plan-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 24px;
+}
+
+.plan-head h3 {
+  font-family: var(--font-head);
+  font-size: 16.5px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+/* The discount, stated in per cent. Measured against our own 1-month plan,
+   which is sold three cards to the right — the one anchor on a pricing page
+   that cannot be accused of being invented. */
+.plan-save {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brand-800);
+  background: var(--brand-100);
+  border: 1px solid var(--brand-300);
+  border-radius: 999px;
+  padding: 4px 9px;
+  white-space: nowrap;
+}
+
+.plan-blurb {
+  margin-top: 8px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-tertiary);
+  min-height: 40px;
+}
+
+/* The one big number on the card. Tabular mono, because it is a rate — the
+   same face the app itself sets a rate in. */
+.plan-rate {
+  margin-top: 18px;
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.plan-cur {
+  font-size: 20px;
+  font-weight: 500;
+  align-self: flex-start;
+  margin-top: 6px;
+}
+
+.plan-num {
+  font-size: 40px;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.plan-per {
+  margin-left: 4px;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+}
+
+/* Three lines, ruled, in the same rhythm as the comparison table below —
+   what leaves the account today, what it would have cost, what it saves. */
+.plan-lines {
+  margin-top: 18px;
+  border-top: 1px solid var(--rule);
+}
+
+.plan-lines > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 13px;
+}
+
+.plan-lines dt {
+  color: var(--text-tertiary);
+}
+
+.plan-lines dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: right;
+}
+
+/* "Instead of" is the anchor: struck through, and quiet, so it reads as the
+   price NOT being paid rather than as a second price. Keyed off the row's own
+   class, never its position — the 1-month card has no anchor to strike. */
+.plan-lines .is-anchor dd {
+  text-decoration: line-through;
+  font-weight: 500;
+  color: var(--text-tertiary);
+}
+
+.plan-lines .is-save dd {
+  color: var(--brand-700);
+}
+
+.plan-cta {
+  margin-top: auto;
+  padding-top: 13px;
+  padding-bottom: 13px;
+  width: 100%;
+  font-size: 14.5px;
+}
+
+/* The CTA has to clear the ruled lines above it even on the shortest card. */
+.plan-lines + .plan-cta {
+  margin-top: 22px;
+}
+
+/* Phones only — see the swipe row at the bottom of this file. On a desktop
+   all four cards are visible at once and an instruction to swipe would be
+   nonsense, so it is not merely hidden, it is only ever shown there. */
+.plans-swipe {
+  display: none;
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.plans-note {
+  margin: 20px auto 0;
+  max-width: 74ch;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.plans-note a {
+  color: var(--brand-700);
+  font-weight: 600;
+}
+
+/* ---- What every plan carries -------------------------------------------
+   Once, under the grid — not four identical tick-lists down four columns.
+   There is one tier, so repeating the list would only tell a reader to go
+   looking for a difference that is not there. */
+
+.includes {
+  margin-top: 44px;
+  padding-top: 26px;
+  border-top: 1px solid var(--rule);
+}
+
+.includes ul {
+  margin-top: 20px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 40px;
+}
+
+.includes li {
+  position: relative;
+  padding: 10px 0 10px 26px;
+  border-top: 1px solid var(--rule);
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* A bare mono tick, not a green circle — the circle-and-tick badge beside
+   every bullet is the exact template tell this page was rebuilt to lose. */
+.includes li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--brand-600);
+}
+
+/* The first item in each column already sits under the section's own rule. */
+.includes li:nth-child(-n + 3) {
+  border-top: 0;
 }
 
 /* ---- Responsive --------------------------------------------------------- */
@@ -1420,6 +1663,40 @@ img {
 @media (max-width: 1000px) {
   .feat-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Two up. Four 270px columns are readable on a laptop; four 180px ones put
+     "12 Month Plan" on three lines and the ₹ figure on two. */
+  .plans {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .plan:nth-child(odd) {
+    border-left: 0;
+  }
+
+  .plan:nth-child(n + 3) {
+    border-top: 1px solid var(--rule);
+  }
+
+  /* The lift only works while the card has neighbours either side of it.
+     In a 2×2 it just knocks the first row out of alignment. */
+  .plan.is-featured {
+    margin: 0;
+    padding-top: 40px;
+  }
+
+  .includes ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 32px;
+  }
+
+  .includes li:nth-child(-n + 3) {
+    border-top: 1px solid var(--rule);
+  }
+
+  .includes li:nth-child(-n + 2) {
+    border-top: 0;
   }
 }
 
@@ -1438,10 +1715,8 @@ img {
     box-shadow: 0 14px 30px rgba(4, 30, 20, 0.28);
   }
 
-  .price-card {
-    grid-template-columns: 1fr;
-    gap: 26px;
-    padding: 28px 22px;
+  .plans-note {
+    text-align: left;
   }
 
   .showcase-tabs {
@@ -1471,6 +1746,126 @@ img {
   .feat-grid {
     grid-template-columns: 1fr;
     gap: 22px;
+  }
+}
+
+/* ---- Price cards on a phone ---------------------------------------------
+   NOTE ON PLACEMENT: this block has to sit AFTER the 1000px one above, not up
+   with the other phone rules near the top of the responsive section. Both
+   match at 390px and both set `.plans` grid-template-columns at the same
+   specificity, so the later block simply wins — putting these with the other
+   640px rules silently left a phone showing the desktop's two-column table
+   and pushed "/month" nine pixels off the side of the screen.
+
+   A swipe row, not four stacked cards. This is what the reference does on a
+   phone and the reason is arithmetic: stacked, these four cards are 1,300px
+   of scrolling — more than one and a half phone screens spent on a price list
+   most visitors will read once. Swiped, they cost one card's height, and the
+   next card peeking past the right edge is what says so. The recommended plan
+   is first, so a visitor who never swipes still sees the one we want taken. */
+
+@media (max-width: 640px) {
+  .plans {
+    display: flex;
+    grid-template-columns: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    /* The shared frame is what makes four cards read as one table. It cannot
+       survive a scroller — the border would scroll away with the content —
+       so on a phone each card carries its own. */
+    border: 0;
+    gap: 12px;
+    /* Room for the featured card's shadow, which is otherwise clipped by the
+       scroll container. */
+    padding: 4px 0 10px;
+    scrollbar-width: none;
+    /* The row runs edge to edge: a card should be able to sit under the
+       screen's edge as you swipe, rather than inside a 20px gutter. */
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    scroll-padding-left: 20px;
+  }
+
+  .plans::-webkit-scrollbar {
+    display: none;
+  }
+
+  .plan {
+    flex: 0 0 78%;
+    scroll-snap-align: start;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    padding: 22px 18px 20px;
+  }
+
+  .plan.is-featured {
+    margin: 0;
+    padding-top: 34px;
+  }
+
+  /* The blurb reserves height so four side-by-side cards line up. In a
+     scroller they are all the same height anyway — the flex row stretches
+     them — so this is just 40px of nothing on every card. */
+  .plan-blurb {
+    min-height: 0;
+    margin-top: 6px;
+  }
+
+  .plan-rate {
+    margin-top: 12px;
+  }
+
+  .plan-num {
+    font-size: 34px;
+  }
+
+  .plan-lines {
+    margin-top: 12px;
+  }
+
+  .plan-lines > div {
+    padding: 7px 0;
+  }
+
+  .plan-lines + .plan-cta {
+    margin-top: 16px;
+  }
+
+  .plans-swipe {
+    display: block;
+  }
+
+  .plans-note {
+    text-align: left;
+    margin-top: 4px;
+  }
+
+  .includes {
+    margin-top: 30px;
+  }
+
+  .includes ul {
+    grid-template-columns: 1fr;
+    margin-top: 14px;
+  }
+
+  /* Twelve one-line items in a single column is the longest list on the page.
+     Two columns is not the answer — at 175px these wrap to three lines each
+     and get taller, not shorter — so the saving comes out of the padding. */
+  .includes li {
+    border-top: 1px solid var(--rule);
+    padding: 8px 0 8px 24px;
+    font-size: 13.5px;
+  }
+
+  .includes li::before {
+    top: 8px;
+  }
+
+  .includes li:first-child {
+    border-top: 0;
   }
 }
 

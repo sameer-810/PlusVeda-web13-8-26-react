@@ -59,6 +59,24 @@ const title = html.match(
 if (!title) throw new Error("no og:title in index.html — nothing to put on the card");
 const headline = title.replace(/&amp;/g, "&");
 
+/**
+ * The cheapest per-month rate, read out of the price list in src/config.ts so
+ * the share card cannot quote a price the page no longer charges.
+ *
+ * It earns its place on a 1200x630 card because of HOW this link travels: a
+ * chemist receives it forwarded on WhatsApp, and decides whether to open it
+ * from the card alone. "From ₹225 a month" is the one line on it that answers
+ * the question he actually has.
+ */
+const planLits = [
+  ...read("src/config.ts").matchAll(
+    /months:\s*(\d+),\s*\n\s*total:\s*(\d+),/g,
+  ),
+].map(([, months, total]) => Math.round(Number(total) / Number(months)));
+if (!planLits.length)
+  throw new Error("no plans found in src/config.ts — the card would quote nothing");
+const fromPrice = `₹${Math.min(...planLits).toLocaleString("en-IN")}`;
+
 const shot = asset("public/shots/dashboard.png");
 const wordmark = asset("public/brand/wordmark.png");
 
@@ -117,7 +135,7 @@ h1 {
   <div id="og-card">
     <div class="copy">
       <img class="logo" src="${wordmark}" alt="" />
-      <span class="eyebrow">For medical stores in India</span>
+      <span class="eyebrow">For medical stores in India &nbsp;·&nbsp; From ${fromPrice} a month</span>
       <h1>${headline}</h1>
       <p class="sub">Photograph the distributor's bill — batch, expiry, MRP, rate and GST come back as stock you can sell.</p>
     </div>
