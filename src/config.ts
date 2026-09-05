@@ -203,15 +203,22 @@ export function contactHref(
   )}&body=${encodeURIComponent(message)}`;
 }
 
-/** The "checkout" link for one plan. */
+/**
+ * Where a price card goes: the signup form, with the plan carried along.
+ *
+ * WHY NOT WHATSAPP. It used to open a chat with the plan named, because there
+ * was no checkout to send anyone to. The flow the owner asked for is the one
+ * every hosting company runs — pick a plan, register, THEN see the full
+ * breakdown — so the card now starts a registration instead of a conversation.
+ *
+ * `?plan=12m` is read by the signup screen, sent with the registration, and
+ * shown to the platform team beside the pending workspace, so the quotation
+ * call opens with the right number. It is a note, not a purchase: nothing is
+ * charged at signup, and an unrecognised code is ignored rather than refused —
+ * these links get forwarded on WhatsApp weeks after they are sent.
+ */
 export function planHref(plan: Plan): string {
-  return contactHref(
-    `Hi, I run a medical store and I'd like the Plusveda ${plan.name} (${inr(
-      plan.total,
-    )} for ${plan.months} month${plan.months === 1 ? "" : "s"}). ` +
-      `Please tell me how to start.`,
-    `Plusveda — ${plan.name}`,
-  );
+  return `${signupHref}?plan=${encodeURIComponent(plan.id)}`;
 }
 
 /** So the button can honestly say what it will do. */

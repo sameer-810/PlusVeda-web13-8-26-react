@@ -103,9 +103,10 @@ rec(
 const planSrc = fs.readFileSync(path.resolve("src/config.ts"), "utf8");
 const PLANS = [
   ...planSrc.matchAll(
-    /name:\s*"([^"]+)",\s*\n\s*months:\s*(\d+),\s*\n\s*total:\s*(\d+),/g,
+    /id:\s*"([^"]+)",\s*\n\s*name:\s*"([^"]+)",\s*\n\s*months:\s*(\d+),\s*\n\s*total:\s*(\d+),/g,
   ),
-].map(([, name, months, total]) => ({
+].map(([, id, name, months, total]) => ({
+  id,
   name,
   months: Number(months),
   total: Number(total),
@@ -122,7 +123,7 @@ const cards = await page.$$eval(".plan", (els) =>
   els.map((el) => ({
     name: el.querySelector("h3")?.textContent?.trim() || "",
     rate: el.querySelector(".plan-num")?.textContent?.trim() || "",
-    lines: el.querySelector(".plan-lines")?.textContent || "",
+    text: el.textContent || "",
     cta: el.querySelector("a.plan-cta")?.getAttribute("href") || "",
   })),
 );
@@ -133,32 +134,66 @@ rec(
   `${cards.length} cards for ${PLANS.length} plans`,
 );
 
-/* Both figures on the card: the per-month rate it leads with, and the total
-   that actually leaves the account. A card that leads with ₹225 and hides
-   ₹2,700 is the trick this page is meant not to play. */
+/* The one figure the public card is allowed to lead with. */
 const wrongCard = PLANS.map((p, i) => {
   const c = cards[i];
   if (!c) return `${p.name}: no card`;
   if (c.name !== p.name) return `card ${i}: "${c.name}" != "${p.name}"`;
   const rate = Number(c.rate.replace(/[^\d]/g, ""));
   if (rate !== p.perMonth) return `${p.name}: shows ₹${rate}/mo, want ₹${p.perMonth}`;
-  if (!c.lines.replace(/[^\d]/g, "").includes(String(p.total)))
-    return `${p.name}: total ₹${p.total} not on the card`;
   return null;
 }).filter(Boolean);
 rec(
   "Cards match the price list",
   wrongCard.length === 0,
-  wrongCard.length ? wrongCard.join("; ") : "rate and total correct on every card",
+  wrongCard.length ? wrongCard.join("; ") : "per-month rate correct on every card",
 );
 
-/* There is no checkout in the product — a plan is switched on by a person —
-   so a card whose button goes nowhere is an unsellable plan. */
-const deadCta = cards.filter((c) => !/^(https:\/\/wa\.me\/|mailto:)/.test(c.cta));
+/**
+ * The public card leads with the rate and NOTHING ELSE.
+ *
+ * Asserted rather than trusted because this is a deliberate reversal, and a
+ * reversal is exactly the kind of thing a later edit puts back without knowing
+ * it was a decision: the breakdown ("You pay ₹2,700 once", the struck-through
+ * anchor, the rupees saved) belongs on the pricing page a visitor reaches
+ * after registering, not here. If it reappears on the public card, this fails.
+ */
+const leaked = cards
+  .map((c, i) => {
+    const p = PLANS[i];
+    const digits = c.text.replace(/[^\d]/g, "");
+    // The rate itself is allowed; the term total and the anchor are not.
+    if (p && p.total !== p.perMonth && digits.includes(String(p.total)))
+      return `${c.name}: term total ₹${p.total} is back on the public card`;
+    if (/You pay|Instead of|You save|Tied in for/i.test(c.text))
+      return `${c.name}: breakdown rows are back on the public card`;
+    return null;
+  })
+  .filter(Boolean);
 rec(
-  "Every plan card reaches a person",
-  deadCta.length === 0,
-  deadCta.length ? deadCta.map((c) => c.name).join(", ") : `${cards.length} live CTAs`,
+  "Public cards show the rate only",
+  leaked.length === 0,
+  leaked.length ? leaked.join("; ") : "no breakdown on any public card",
+);
+
+/**
+ * Every card starts a registration, with the plan carried along.
+ *
+ * These used to open WhatsApp, because there was no checkout to send anyone
+ * to. The flow now is the hosting-company one the owner asked for: pick a
+ * plan → register → see the full breakdown. A card whose button drops the
+ * `?plan=` is a card that arrives at the quotation call anonymous.
+ */
+const badCta = PLANS.map((p, i) => {
+  const href = cards[i]?.cta || "";
+  if (!/\/signup\?plan=/.test(href)) return `${p.name}: ${href || "no href"}`;
+  if (!href.endsWith(`plan=${p.id}`)) return `${p.name}: wrong plan in ${href}`;
+  return null;
+}).filter(Boolean);
+rec(
+  "Every card starts a signup for its own plan",
+  badCta.length === 0,
+  badCta.length ? badCta.join("; ") : `${cards.length} CTAs carry ?plan=`,
 );
 
 /* And the crawler is told the same prices as the visitor. */

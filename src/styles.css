@@ -1529,50 +1529,13 @@ img {
   color: var(--text-tertiary);
 }
 
-/* Three lines, ruled, in the same rhythm as the comparison table below —
-   what leaves the account today, what it would have cost, what it saves. */
-.plan-lines {
-  margin-top: 18px;
-  border-top: 1px solid var(--rule);
-}
+/* The ruled breakdown that sat here — "You pay ₹2,700 once", the struck-through
+   anchor, the rupees saved — is gone from the PUBLIC card by request: it leads
+   with one number now, and the arithmetic appears on the pricing page a visitor
+   reaches after registering. The app renders it there from the same figures.
 
-.plan-lines > div {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 9px 0;
-  border-bottom: 1px solid var(--rule);
-  font-size: 13px;
-}
-
-.plan-lines dt {
-  color: var(--text-tertiary);
-}
-
-.plan-lines dd {
-  margin: 0;
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--text-primary);
-  text-align: right;
-}
-
-/* "Instead of" is the anchor: struck through, and quiet, so it reads as the
-   price NOT being paid rather than as a second price. Keyed off the row's own
-   class, never its position — the 1-month card has no anchor to strike. */
-.plan-lines .is-anchor dd {
-  text-decoration: line-through;
-  font-weight: 500;
-  color: var(--text-tertiary);
-}
-
-.plan-lines .is-save dd {
-  color: var(--brand-700);
-}
-
+   `margin-top: auto` is what holds the row together without it: the buttons sit
+   on one line across four cards whose taglines wrap to different heights. */
 .plan-cta {
   margin-top: auto;
   padding-top: 13px;
@@ -1581,8 +1544,9 @@ img {
   font-size: 14.5px;
 }
 
-/* The CTA has to clear the ruled lines above it even on the shortest card. */
-.plan-lines + .plan-cta {
+/* Air between the rate and the button on the shortest card, where `auto` has
+   nothing left to distribute. */
+.plan-rate + .plan-cta {
   margin-top: 22px;
 }
 
@@ -1821,15 +1785,7 @@ img {
     font-size: 34px;
   }
 
-  .plan-lines {
-    margin-top: 12px;
-  }
-
-  .plan-lines > div {
-    padding: 7px 0;
-  }
-
-  .plan-lines + .plan-cta {
+  .plan-rate + .plan-cta {
     margin-top: 16px;
   }
 

@@ -299,26 +299,8 @@ function Pricing() {
     <>
       <div className="plans">
         {plans.map((plan) => {
-          const { perMonth, listTotal, saves, savePct } = planMath(plan);
+          const { perMonth, savePct } = planMath(plan);
           const term = `${plan.months} month${plan.months === 1 ? "" : "s"}`;
-
-          /* Three rows on every card, discounted or not, so four cards read as
-             one table across rather than four ragged blocks.
-             The class is carried per row rather than taken from its POSITION:
-             styling "row two" as the struck-through anchor put a line through
-             "Covers — 1 month" on the one card that has nothing to strike. */
-          const rows: [string, string, string?][] =
-            saves > 0
-              ? [
-                  ["You pay", `${inr(plan.total)} once`],
-                  ["Instead of", inr(listTotal), "is-anchor"],
-                  ["You save", inr(saves), "is-save"],
-                ]
-              : [
-                  ["You pay", `${inr(plan.total)} once`],
-                  ["Covers", term],
-                  ["Tied in for", "Nothing"],
-                ];
 
           return (
             <article
@@ -346,18 +328,14 @@ function Pricing() {
                 <span className="plan-per">/month</span>
               </p>
 
-              <dl className="plan-lines">
-                {rows.map(([k, v, cls]) => (
-                  <div className={cls} key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
-                  </div>
-                ))}
-              </dl>
+              {/* The breakdown that used to sit here — "You pay ₹2,700 once",
+                  the struck-through anchor and the rupees saved — moved to the
+                  page a visitor lands on after registering. The owner asked
+                  the public card to lead with one number and nothing else, the
+                  way a hosting company's does; the arithmetic appears once
+                  someone has actually put their name in. See PricingScreen in
+                  the app, which renders it from the same figures. */}
 
-              {/* There is no card-payment page in the product: a plan is
-                  switched on by a person. So this goes to WhatsApp (or email
-                  until the number is set) with the plan already named. */}
               <a
                 className={`btn btn-pill plan-cta ${
                   plan.featured ? "btn-primary" : "btn-ghost"
@@ -378,11 +356,16 @@ function Pricing() {
         Swipe for the other plans &rarr;
       </p>
 
+      {/*
+        The one place the public page still says a plan is paid for the whole
+        term. Removing the per-card "You pay ₹2,700 once" line was the ask;
+        letting a chemist believe ₹225 leaves his account every month was not,
+        and the sentence costs nothing here.
+      */}
       <p className="plans-note">
-        Prices are per medical store, in rupees. Nothing renews on its own and
-        no card is stored — we tell you before a term ends.{" "}
-        <a href={signupHref}>Start free</a> and put one real purchase bill
-        through it before you pay for anything.
+        Each plan is paid once for the term, and you&apos;ll see the full
+        breakdown before anything is agreed. Nothing renews on its own and no
+        card is stored. Prices are per medical store, in rupees.
       </p>
 
       <div className="includes" data-reveal>
