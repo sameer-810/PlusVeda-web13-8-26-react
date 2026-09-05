@@ -10,15 +10,16 @@
 /* ============================================================================
    TODO — OWNER: FILL THESE IN BEFORE THE PAGE GOES LIVE
 
-   Three values, all in the block below, none of which can be guessed:
+   Two values are still unset, neither of which can be guessed:
 
      1. whatsappNumber — the sales WhatsApp number.  ⚠ costs leads while empty
      2. playStoreUrl   — the Play Store listing, once the app is published
-     3. appUrl         — only if the app moves off its Vercel address
 
-   The fourth, the launch domain for canonical/og:url, is NOT here — it lives
-   in `vite.config.ts` as SITE_ORIGIN, because index.html needs it at build
-   time and index.html is deliberately static.
+   `appUrl` below and SITE_ORIGIN in vite.config.ts were both wrong and are now
+   correct: the app is at portal.plusveda.online and the site at
+   www.plusveda.online. SITE_ORIGIN lives in vite.config.ts rather than here
+   because index.html needs it at build time and index.html is deliberately
+   static.
 
    Nothing here is a dead link while empty; each one degrades to something that
    still works. That is the whole reason this went unnoticed — an empty
@@ -28,10 +29,11 @@
 
 export const site = {
   /**
-   * Where "Start free" and "Sign in" send people — the live app.
-   * TODO(owner): change if the app gets its own domain, e.g. "https://app.plusveda.app".
+   * Where every plan button, "Start free" and "Sign in" send people — the live
+   * app. Confirmed by the owner on 2026-09-05: the app is served from its own
+   * subdomain now, not the Vercel address this used to hold.
    */
-  appUrl: "https://23-jun26-medical-front.vercel.app",
+  appUrl: "https://portal.plusveda.online",
 
   /**
    * ⚠ TODO(owner) — PASTE THE SALES WHATSAPP NUMBER HERE.

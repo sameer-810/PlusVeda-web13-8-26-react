@@ -10,20 +10,20 @@ import react from "@vitejs/plugin-react";
  * the page is built from it: `<link rel="canonical">`, `og:url`, `og:image` and
  * the JSON-LD `url`. Change it here and rebuild — there is nowhere else to look.
  *
- * It currently says `https://plusveda.app`, which MAY NOT BE OWNED. If the site
- * launches on its Vercel address instead and this is left as-is, Google reads
- * every page as a duplicate of a domain that does not resolve, and the canonical
- * tag hands the ranking to nobody. Whatever the site is actually served from is
- * what belongs here — the Vercel URL is a perfectly good answer until an apex
- * domain is bought.
+ * CORRECTED 2026-09-05. This said `https://plusveda.app`, a domain that does not
+ * resolve — the site is served from www.plusveda.online. While it was wrong the
+ * canonical tag handed the ranking to nobody, and WhatsApp fetched og:image from
+ * a host that does not exist, so every shared link drew its card with a hole
+ * where the picture goes. The owner confirmed the two live addresses:
  *
- *   e.g. "https://plusveda.app"  or  "https://plusveda-landing.vercel.app"
+ *   landing  https://www.plusveda.online
+ *   app      https://portal.plusveda.online   (see site.appUrl in src/config.ts)
  *
  * Absolute is not optional for the share tags: WhatsApp and Facebook fetch
  * og:image from their own servers, where a relative "/og.png" resolves against
  * nothing and the card renders with a hole in it.
  */
-const SITE_ORIGIN = "https://plusveda.app";
+const SITE_ORIGIN = "https://www.plusveda.online";
 
 /**
  * Substitutes %SITE_ORIGIN% in index.html at dev-server and build time.
