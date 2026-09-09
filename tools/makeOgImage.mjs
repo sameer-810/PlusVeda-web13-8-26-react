@@ -65,7 +65,7 @@ const headline = title.replace(/&amp;/g, "&");
  *
  * It earns its place on a 1200x630 card because of HOW this link travels: a
  * chemist receives it forwarded on WhatsApp, and decides whether to open it
- * from the card alone. "From ₹399 a month" is the one line on it that answers
+ * from the card alone. "From ₹299 a month" is the one line on it that answers
  * the question he actually has.
  */
 const planLits = [

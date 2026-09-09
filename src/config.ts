@@ -58,13 +58,9 @@ export const site = {
    for the whole term; the per-month figure, discount badge and rupees saved are
    all DERIVED from it. Never hardcode a derived number into the JSX.
 
-   The owner quoted these as PER-MONTH rates (399 / 399 / 499 / 799), so each
-   `total` below is that rate times the term.
-
-   ⚠ 12m and 6m are both ₹399/month, so the annual plan is no cheaper per month
-   than the half-year one — a buyer paying attention takes 6 months for the same
-   rate and half the commitment. The "Best value" ribbon stays on 12m because
-   that is the term we want sold, but the ladder does not currently justify it.
+   The owner quoted these as PER-MONTH rates (299 / 399 / 499 / 799), so each
+   `total` below is that rate times the term. Every step down the ladder is a
+   real one, so the "Best value" ribbon on the 12-month card is earned.
 
    ⚠ TODO(owner): confirm whether these include GST. The page says neither.
    ========================================================================= */
@@ -94,7 +90,7 @@ export const plans: Plan[] = [
     id: "12m",
     name: "12 Month Plan",
     months: 12,
-    total: 4788, // ₹399 × 12
+    total: 3588, // ₹299 × 12
     featured: true,
     blurb: "A full year, at the lowest rate we sell.",
   },
