@@ -154,7 +154,7 @@ rec(
  *
  * Asserted rather than trusted because this is a deliberate reversal, and a
  * reversal is exactly the kind of thing a later edit puts back without knowing
- * it was a decision: the breakdown ("You pay ₹2,700 once", the struck-through
+ * it was a decision: the breakdown ("You pay ... once", the struck-through
  * anchor, the rupees saved) belongs on the pricing page a visitor reaches
  * after registering, not here. If it reappears on the public card, this fails.
  */

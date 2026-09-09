@@ -1502,7 +1502,7 @@ img {
   color: var(--text-tertiary);
 }
 
-/* The ruled breakdown that sat here — "You pay ₹2,700 once", the struck-through
+/* The ruled breakdown that sat here — "You pay ... once", the struck-through
    anchor, the rupees saved — is gone from the PUBLIC card by request: it leads
    with one number now, and the arithmetic appears on the pricing page a visitor
    reaches after registering. The app renders it there from the same figures.

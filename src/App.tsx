@@ -300,7 +300,7 @@ function Pricing() {
                 <span className="plan-per">/month</span>
               </p>
 
-              {/* The breakdown that used to sit here — "You pay ₹2,700 once",
+              {/* The breakdown that used to sit here — "You pay ₹4,788 once",
                   the struck-through anchor and the rupees saved — moved to the
                   page a visitor lands on after registering. The owner asked
                   the public card to lead with one number and nothing else, the
@@ -330,8 +330,8 @@ function Pricing() {
 
       {/*
         The one place the public page still says a plan is paid for the whole
-        term. Removing the per-card "You pay ₹2,700 once" line was the ask;
-        letting a chemist believe ₹225 leaves his account every month was not,
+        term. Removing the per-card "You pay once" line was the ask;
+        letting a chemist believe the monthly rate leaves his account every month
         and the sentence costs nothing here.
       */}
       <p className="plans-note">
