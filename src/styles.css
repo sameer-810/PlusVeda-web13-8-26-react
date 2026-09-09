@@ -1,26 +1,14 @@
 /**
- * Plusveda landing — styles.
+ * Plusveda landing — styles. Art direction: "the counter ledger".
  *
- * Art direction: "the counter ledger".
+ * A pharmacy runs on paperwork, so the page is built like a register rather
+ * than a template:
  *
- * The first version of this page was rebuilt because it looked machine-made,
- * and it did — it had every default: a centred hero, a rounded pill badge over
- * the headline, a radial gradient wash, three identical cards in a row (twice),
- * the same green circle-tick beside every bullet, pill buttons, and one
- * border-radius on everything. Those are exactly the patterns an AI reaches for
- * because they are the most common ones on the web, which is precisely why a
- * page wearing all of them looks like every other page.
- *
- * What replaced them comes from what this product IS. A pharmacy runs on
- * paperwork: batch numbers, expiry dates, rates, GST columns, a purchase
- * register ruled in lines. So:
- *
- *   - Hairline rules instead of card shadows. The page is ruled like a ledger.
- *   - Tabular mono numerals (IBM Plex Mono) for every figure, section number
- *     and label — the typography of a batch number, not of a landing page.
+ *   - Hairline rules instead of card shadows.
+ *   - Tabular mono numerals (IBM Plex Mono) for every figure and label.
  *   - 3px corners. A tool has sharp corners; a template has 16px ones.
  *   - Left-aligned, asymmetric columns. Centred everything is the giveaway.
- *   - One flat green. No gradient anywhere on the page.
+ *   - One flat green, no gradients (the hero band excepted).
  *
  * Tokens are copied from the app's designSystem.ts rather than imported, so
  * this site never depends on the Expo bundle. Change the brand green in both.
@@ -706,7 +694,6 @@ img {
   font-size: 15px;
 }
 
-
 @media (max-width: 1080px) {
   .hero-grid {
     grid-template-columns: 1fr;
@@ -891,7 +878,6 @@ img {
     margin-top: 6px;
   }
 
-
   /* Steps read as a short numbered list on a phone, not three stacked panels. */
   .steps {
     gap: 0;
@@ -1027,7 +1013,6 @@ img {
   }
 }
 
-
 /* ---- Wave dividers ------------------------------------------------------
    Layered curves between bands instead of a straight edge. `display:block` on
    the svg kills the inline-element descender gap that otherwise shows as a
@@ -1081,14 +1066,10 @@ img {
   position: relative;
 }
 
-/* The flipped wave sits at the TOP of the closing band.
-   Two things this needs that are easy to miss:
-   1. Top padding that clears the wave. It is absolutely positioned, so it
-      occupies no layout space and will otherwise be drawn straight over the
-      "Start free" button.
-   2. An explicit stacking order. A positioned element paints above in-flow
-      content regardless of DOM order, so being first in the markup does not
-      put it behind — the content has to be lifted deliberately. */
+/* The flipped wave sits at the TOP of the closing band. It is absolutely
+   positioned, so it needs top padding to clear it (otherwise it draws over the
+   "Start free" button) and an explicit stacking order (a positioned element
+   paints above in-flow content regardless of DOM order). */
 .close-cta {
   position: relative;
   padding-top: 96px;
@@ -1116,16 +1097,13 @@ img {
 /* =========================================================================
    REFERENCE-SITE LAYOUT
    =========================================================================
-   The owner asked for the same page as the reference site he sent, so these
-   sections copy its structure: a product shot floating in the gradient hero,
-   a tabbed showcase where they play video, an eight-card image grid, a price
-   band, centred section headings.
+   Sections copying the structure of the reference site the owner sent: product
+   shot in the gradient hero, tabbed showcase, eight-card grid, price band,
+   centred headings.
 
-   This block is appended deliberately. Several rules below restate selectors
-   defined earlier in the file (.hero-fig, .section-head) and win on source
-   order at equal specificity, which is cheaper to read than hunting down and
-   rewriting the originals — and leaves the earlier layout intact if a section
-   is ever reverted.
+   Appended deliberately — several rules restate selectors defined earlier
+   (.hero-fig, .section-head) and win on source order at equal specificity,
+   which leaves the earlier layout intact if a section is ever reverted.
    ========================================================================= */
 
 /* ---- Pill CTA -----------------------------------------------------------
@@ -1385,18 +1363,13 @@ img {
 }
 
 /* ---- Price cards --------------------------------------------------------
-   Four terms of the same product, sold the way a hosting company sells one:
-   the per-month figure is the headline and the total is the fine print.
+   Four terms of one product, sold the way a hosting company sells one: the
+   per-month figure is the headline, the total is the fine print.
 
-   Built in this page's own language rather than the reference's. A hosting
-   page stacks gradients, drop shadows and 16px corners on its plan cards; the
-   rest of THIS page is hairline rules, 3px corners, tabular mono figures and
-   one flat green, and a pricing table is the last place to break that — this
-   is the band where the visitor is deciding whether we look serious.
-
-   So: the four cards are one ruled table across, sharing borders like columns
-   in a register. Only the featured card leaves the grid — a green rule, a
-   ribbon and a lift — because a price list needs exactly one default. */
+   Built in this page's language, not the reference's — hairline rules, 3px
+   corners, tabular mono. The four cards read as one ruled table across;
+   only the featured card leaves the grid, because a price list needs exactly
+   one default. */
 
 .plans {
   display: grid;
@@ -1714,19 +1687,13 @@ img {
 }
 
 /* ---- Price cards on a phone ---------------------------------------------
-   NOTE ON PLACEMENT: this block has to sit AFTER the 1000px one above, not up
-   with the other phone rules near the top of the responsive section. Both
-   match at 390px and both set `.plans` grid-template-columns at the same
-   specificity, so the later block simply wins — putting these with the other
-   640px rules silently left a phone showing the desktop's two-column table
-   and pushed "/month" nine pixels off the side of the screen.
+   PLACEMENT: this block must sit AFTER the 1000px one above. Both match at
+   390px and both set `.plans` grid-template-columns at equal specificity, so
+   the later one wins — filed with the other 640px rules it silently left a
+   phone on the desktop's two-column table.
 
-   A swipe row, not four stacked cards. This is what the reference does on a
-   phone and the reason is arithmetic: stacked, these four cards are 1,300px
-   of scrolling — more than one and a half phone screens spent on a price list
-   most visitors will read once. Swiped, they cost one card's height, and the
-   next card peeking past the right edge is what says so. The recommended plan
-   is first, so a visitor who never swipes still sees the one we want taken. */
+   A swipe row, not four stacked cards: stacked they are 1,300px of scrolling.
+   The recommended plan is first, so a visitor who never swipes still sees it. */
 
 @media (max-width: 640px) {
   .plans {
@@ -1828,22 +1795,13 @@ img {
 /* =========================================================================
    HOVER AND MOTION
    =========================================================================
-   Copied from the reference site's actual interaction vocabulary rather than
-   invented. It is a Tailwind build, so its behaviour is legible straight off
-   the class attributes; these were the ones it uses, by frequency:
+   Taken from the reference site's own vocabulary (a Tailwind build, so its
+   classes are legible): cards lift 2 and deepen their shadow, the border takes
+   the brand colour, the card TITLE turns brand on group hover, and the image
+   inside scales slightly — all on a 300ms transition.
 
-     hover:-translate-y-2      (8x)   cards lift on hover
-     hover:shadow-lg / -xl     (9x)   and the shadow deepens under them
-     hover:border-teal-500     (11x)  the border takes the brand colour
-     group-hover:text-teal-600 (30x)  the card TITLE turns brand when the
-                                      whole card is hovered, not just the text
-     group-hover:scale-125/105 (22x)  and the image inside grows slightly
-     transition-all duration-300      on essentially all of it
-
-   The last two are what make it feel like one object responding rather than
-   four separate things. Everything here is transform / opacity / colour, so
-   it composites off the main thread; nothing animates width, height or
-   position, which would force layout on every frame.
+   The group-hover pair is what makes a card feel like one object. Everything
+   here is transform / opacity / colour so it composites off the main thread.
    ========================================================================= */
 
 /* ---- Hero badge ---------------------------------------------------------
@@ -2038,18 +1996,13 @@ img {
 /* =========================================================================
    SCROLL REVEAL
    =========================================================================
-   The reference animates its sections in with Framer Motion — opacity 0 to 1
-   and a small upward translate, settling to `transform: none`. This is the
-   same effect in CSS, driven by the IntersectionObserver in useReveal.ts.
+   The reference's Framer Motion entrance, in CSS, driven by the
+   IntersectionObserver in useReveal.ts.
 
-   Two differences from a naive implementation, both deliberate:
-
-   1. The travel is 18px, not 40. Long entrance animations read as slow on the
-      second scroll past, and this page is eleven phone screens long.
-   2. Cards in a grid are STAGGERED. Eight cards fading in together is one
-      event; eight cards arriving 60ms apart reads as the grid assembling, and
-      it is the single biggest difference between this and a stock fade-in.
-      The delay is capped so nothing at the end of a long grid is left waiting.
+   Two deliberate differences: the travel is 18px rather than 40 (long
+   entrances read as slow on the second pass), and cards in a grid are
+   STAGGERED 60ms apart so the grid reads as assembling. The delay is capped so
+   nothing at the end of a long grid is left waiting.
    ========================================================================= */
 
 .reveal-armed {
@@ -2075,11 +2028,9 @@ img {
 /*
  * MOTION OFF.
  *
- * useReveal already bails out entirely under prefers-reduced-motion, so the
- * reveal is handled. This covers the hover transforms, which it does not
- * touch — vestibular triggers are movement, and a grid of cards jumping 8px
- * under the pointer is movement. Colour and shadow feedback survives, so the
- * page still responds; it just stops moving.
+ * useReveal already bails out under prefers-reduced-motion; this covers the
+ * hover transforms, which it does not touch. Colour and shadow feedback
+ * survives, so the page still responds — it just stops moving.
  */
 @media (prefers-reduced-motion: reduce) {
   .feat:hover,

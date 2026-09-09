@@ -1,25 +1,18 @@
 import { useEffect } from "react";
 
 /**
- * Scroll-reveal, the cheap way.
+ * Scroll-reveal, the cheap way. The reference site uses Framer Motion — a
+ * ~40KB main-thread tax on a page whose job is to load fast on a mid-range
+ * Android, for an effect that is twelve lines of CSS. This adds one class via
+ * IntersectionObserver; the transition is `transform` and `opacity` only.
  *
- * The reference site animates its sections in with Framer Motion. That is a
- * ~40KB main-thread tax on a page whose entire job is to load fast on a
- * mid-range Android over 4G, for an effect that is twelve lines of CSS. So this
- * uses an IntersectionObserver to add one class, and the transition lives in
- * the stylesheet on `transform` and `opacity` only — both composited off the
- * main thread.
+ * Three things that are not optional:
  *
- * THREE THINGS THAT ARE NOT OPTIONAL:
- *
- * 1. Elements start visible in the markup and are hidden by a class this hook
- *    adds at runtime. If the observer never runs — old browser, script error,
- *    JS disabled — the page is simply not animated, rather than blank. A
- *    reveal effect that can hide your entire landing page is a bad trade.
- * 2. `prefers-reduced-motion` is honoured by bailing out entirely, so nothing
- *    is even armed. Vestibular disorders are not a corner case.
+ * 1. Elements start VISIBLE and are hidden by a class added at runtime. If the
+ *    observer never runs, the page is un-animated rather than blank.
+ * 2. `prefers-reduced-motion` bails out entirely, so nothing is even armed.
  * 3. It reveals once and stops observing. Re-animating on every scroll past is
- *    the thing that makes these effects feel cheap.
+ *    what makes these effects feel cheap.
  */
 export function useReveal() {
   useEffect(() => {
@@ -39,19 +32,13 @@ export function useReveal() {
     targets.forEach((el) => el.classList.add("reveal-armed"));
 
     /**
-     * Stagger, for elements that arrive as a group.
+     * Stagger, for elements that arrive as a group. Eight cards fading in
+     * together reads as a page loading late; 60ms apart reads as the grid
+     * assembling.
      *
-     * Eight feature cards fading in together is one event and reads as a page
-     * loading late. The same eight arriving 60ms apart reads as the grid
-     * assembling itself, and it is the biggest single difference between this
-     * and a stock fade-in — the reference site gets the same effect out of
-     * Framer Motion's `staggerChildren`.
-     *
-     * The index is per-parent, not global, so each grid counts from zero
-     * rather than inheriting an offset from whatever came before it. The cap
-     * matters: without it the last card of a long grid waits half a second
-     * after the first, which on a fast scroll means it is still animating
-     * when it has already left the screen.
+     * The index is per-parent, so each grid counts from zero. The cap matters:
+     * without it the last card of a long grid is still animating after it has
+     * left the screen.
      */
     const STEP = 60;
     const MAX = 240;

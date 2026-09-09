@@ -1,46 +1,18 @@
 /**
- * Plusveda landing page — rebuilt against the reference site the owner sent.
+ * Plusveda landing page — built to the structure of the reference site the
+ * owner sent (mediflux.in): gradient hero with the product beside the
+ * headline, wave divider, figures strip, "what is it", tabbed showcase,
+ * eight-card grid, price, FAQ, closing CTA, footer.
  *
- * WHAT THIS IS
- * ------------
- * The owner pointed at mediflux.in and asked for the same page. It is copied
- * band for band: gradient hero with the product floating beside the headline,
- * layered wave divider, a strip of figures, a "what is it" block, a tabbed
- * showcase of the software, an eight-card feature grid built on images, price,
- * social proof, FAQ, closing CTA, footer. Same order, same proportions, same
- * typeface family (Outfit), same pill CTA.
+ * Their copy, photographs and hero videos are theirs — every slot keeps the
+ * reference's SHAPE and carries Plusveda's own content. The three
+ * claims-shaped slots are filled honestly: checkable figures rather than
+ * "+4400% pharmacies", a plain statement that we are taking on our first
+ * pharmacies instead of invented testimonials, and the owner's real price
+ * list anchored against our own 1-month plan.
  *
- * WHAT IS DELIBERATELY NOT COPIED, AND WHY
- * ----------------------------------------
- * Their headline, their body copy and their photographs are theirs. Their two
- * hero videos are recordings of the MediFlux interface — putting those on this
- * page would advertise their product on our domain. So every slot keeps the
- * reference's SHAPE and carries Plusveda's own content.
- *
- * The three claims-shaped slots are filled honestly, which is the one place
- * this page departs from the reference in substance:
- *   - the figures strip carries facts checkable inside the product, not
- *     "+4400% pharmacies";
- *   - where they run customer testimonials we say plainly that we are taking
- *     on our first pharmacies, because inventing a quote is the one mistake a
- *     chemist will tell every other chemist about;
- *   - the price band carries the owner's real price list (set 2026-09-01) and
- *     the term discounts are measured against our own 1-month plan, which is
- *     sold on the same row — not against an invented "regular price".
- *
- * THE IMAGES ARE THE POINT
- * ------------------------
- * The owner's complaint about the previous version was vector illustrations
- * where the reference has photographs and product shots. There is not a single
- * drawing left on this page. It splits the work the way the reference does:
- *
- *   - the software itself, full width, where it can actually be read — the
- *     hero, the "what is it" block and the four-tab showcase. These are real
- *     screenshots of a running shop with real stock in it, shot by
- *     tools/shootLanding.mjs in the app repo, which refuses to publish a shot
- *     of an empty or unsellable screen.
- *   - photographs everywhere a picture only has to set a scene, above all the
- *     eight-card grid, where a screenshot would be unreadable at 250px.
+ * No illustrations anywhere: the software is shown full width where it can be
+ * read (hero, "what is it", showcase), photographs carry the rest.
  */
 import { useEffect, useState } from "react";
 import { Wave } from "./Wave";
@@ -94,7 +66,11 @@ function StickyBar() {
       <a className="btn btn-primary" href={signupHref} tabIndex={show ? 0 : -1}>
         Start free
       </a>
-      <a className="btn btn-ghost" href={contactHref()} tabIndex={show ? 0 : -1}>
+      <a
+        className="btn btn-ghost"
+        href={contactHref()}
+        tabIndex={show ? 0 : -1}
+      >
         {site.whatsappNumber ? "WhatsApp" : "Email us"}
       </a>
     </div>
@@ -105,7 +81,10 @@ function Cta({ note, pill }: { note?: string; pill?: boolean }) {
   return (
     <>
       <div className="hero-cta">
-        <a className={`btn btn-primary${pill ? " btn-pill" : ""}`} href={signupHref}>
+        <a
+          className={`btn btn-primary${pill ? " btn-pill" : ""}`}
+          href={signupHref}
+        >
           Start free
           {/* Slides forward on hover, as the reference's does. Decorative, so
               it is hidden from screen readers — the link already says where it
@@ -114,7 +93,10 @@ function Cta({ note, pill }: { note?: string; pill?: boolean }) {
             &rarr;
           </span>
         </a>
-        <a className={`btn btn-ghost${pill ? " btn-pill" : ""}`} href={contactHref()}>
+        <a
+          className={`btn btn-ghost${pill ? " btn-pill" : ""}`}
+          href={contactHref()}
+        >
           {contactLabel}
         </a>
       </div>
@@ -177,17 +159,13 @@ const PANELS: Panel[] = [
 ];
 
 /**
- * Eight cards, four across, exactly as the reference lays them out — and
- * photographs rather than screenshots, for the same reason they use them.
+ * Eight cards, four across, as the reference lays them out — photographs
+ * rather than screenshots.
  *
- * The first build of this grid used cropped screenshots of the product. At the
- * width these cards actually render — about 250px on a desktop — a 1440px
- * application screen is a field of grey noise; you cannot read a single row of
- * it. A photograph survives that reduction because it has one subject.
- *
- * So the software is shown where it can be seen: full width in the hero and in
- * the tabbed showcase above. The grid carries the atmosphere. That is exactly
- * how the reference site divides the same job.
+ * The first build used cropped screenshots. At the width these render (~250px)
+ * a 1440px application screen is a field of grey noise; a photograph survives
+ * the reduction because it has one subject. The software is shown full width
+ * in the hero and showcase instead.
  */
 const FEATURES = [
   {
@@ -273,26 +251,19 @@ const INCLUDED = [
 ];
 
 /**
- * The price band, built the way the owner asked — the way Hostinger sells a
- * term rather than a tier.
- *
- * Hostinger has one product too. What they actually sell on that page is the
- * LENGTH of the commitment, and four devices do all the work:
+ * The price band, sold the way Hostinger sells a term rather than a tier:
  *
  *   1. the per-month figure is the headline, never the total;
- *   2. the total is still shown, plainly, as "what leaves your account today",
- *      because a chemist who discovers it at checkout does not come back;
- *   3. every card is anchored against the same undiscounted month-to-month
- *      rate, in per cent AND in rupees;
+ *   2. the total is still shown plainly, because a chemist who finds it at
+ *      checkout does not come back;
+ *   3. every card is anchored against the same month-to-month rate, in per
+ *      cent and in rupees;
  *   4. one card is raised and named, so there is a default to take.
  *
- * All four are here. What is NOT copied is the pressure — no countdown clock,
- * no "renews at ₹4,000", no fake struck-out list price. The anchor on these
- * cards is our own 1-month plan, which is sold on this very page: it is the
- * one strike-through that is literally true.
+ * Not copied: the pressure. No countdown, no "renews at ₹4,000", no invented
+ * list price — the anchor is our own 1-month plan, sold on this same row.
  *
- * Every figure below is derived in config.ts from the term and the total, so
- * the cards cannot fall out of step with the price list.
+ * Every figure is derived in config.ts from the term and the total.
  */
 function Pricing() {
   return (
@@ -386,11 +357,31 @@ function Pricing() {
  * minute, and none of it goes stale when a rival ships an update.
  */
 const COMPARISONS = [
-  { q: "Getting a purchase bill in", usual: "Typed line by line", ours: "Photograph it" },
-  { q: "Which batch gets sold", usual: "Whichever the counter picks", ours: "Nearest expiry, every time" },
-  { q: "When you're out of stock", usual: "Send them elsewhere", ours: "Same-salt substitute, one tap" },
-  { q: "Where the reorder list comes from", usual: "A number typed in once", ours: "What you actually sold" },
-  { q: "What the assistant can see", usual: "Everything", ours: "Exactly what you choose" },
+  {
+    q: "Getting a purchase bill in",
+    usual: "Typed line by line",
+    ours: "Photograph it",
+  },
+  {
+    q: "Which batch gets sold",
+    usual: "Whichever the counter picks",
+    ours: "Nearest expiry, every time",
+  },
+  {
+    q: "When you're out of stock",
+    usual: "Send them elsewhere",
+    ours: "Same-salt substitute, one tap",
+  },
+  {
+    q: "Where the reorder list comes from",
+    usual: "A number typed in once",
+    ours: "What you actually sold",
+  },
+  {
+    q: "What the assistant can see",
+    usual: "Everything",
+    ours: "Exactly what you choose",
+  },
   {
     q: "Paying for it",
     usual: "A year's licence, up front",
@@ -497,7 +488,10 @@ export default function App() {
               Photograph your distributor's invoice and every line comes back —
               batch, expiry, MRP, rate and GST — as stock you can sell.
             </p>
-            <Cta pill note="Free to start · no card needed · browser, Android and the counter PC" />
+            <Cta
+              pill
+              note="Free to start · no card needed · browser, Android and the counter PC"
+            />
           </div>
 
           <figure className="hero-fig" data-reveal>
@@ -646,7 +640,11 @@ export default function App() {
             </div>
           </div>
 
-          <div className="compare" role="table" aria-label="How the work differs">
+          <div
+            className="compare"
+            role="table"
+            aria-label="How the work differs"
+          >
             <div className="compare-head" role="row">
               <span role="columnheader">The job</span>
               <span role="columnheader">Usually</span>
@@ -729,8 +727,8 @@ export default function App() {
             <p className="label">Start today</p>
             <h2>Run your shop with confidence</h2>
             <p>
-              Nothing to install. Free to try, then from{" "}
-              {inr(cheapestPerMonth)} a month.
+              Nothing to install. Free to try, then from {inr(cheapestPerMonth)}{" "}
+              a month.
             </p>
           </div>
           <div>
