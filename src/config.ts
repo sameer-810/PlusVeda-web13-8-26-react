@@ -52,13 +52,19 @@ export const site = {
 };
 
 /* ============================================================================
-   THE PRICE LIST — set by the owner on 2026-09-01
+   THE PRICE LIST — revised by the owner on 2026-09-09
    ============================================================================
    The only prices published on this page. `total` is what a pharmacy pays ONCE
    for the whole term; the per-month figure, discount badge and rupees saved are
    all DERIVED from it. Never hardcode a derived number into the JSX.
 
-   Plan names are the owner's own words, verbatim.
+   The owner quoted these as PER-MONTH rates (399 / 399 / 499 / 799), so each
+   `total` below is that rate times the term.
+
+   ⚠ 12m and 6m are both ₹399/month, so the annual plan is no cheaper per month
+   than the half-year one — a buyer paying attention takes 6 months for the same
+   rate and half the commitment. The "Best value" ribbon stays on 12m because
+   that is the term we want sold, but the ladder does not currently justify it.
 
    ⚠ TODO(owner): confirm whether these include GST. The page says neither.
    ========================================================================= */
@@ -68,7 +74,7 @@ export const site = {
  * discount on the page is measured against this, so it is also the price of
  * the 1-month plan and the two must never drift apart.
  */
-export const monthlyListPrice = 1000;
+export const monthlyListPrice = 799;
 
 export type Plan = {
   id: string;
@@ -88,7 +94,7 @@ export const plans: Plan[] = [
     id: "12m",
     name: "12 Month Plan",
     months: 12,
-    total: 2700,
+    total: 4788, // ₹399 × 12
     featured: true,
     blurb: "A full year, at the lowest rate we sell.",
   },
@@ -96,26 +102,26 @@ export const plans: Plan[] = [
     id: "6m",
     name: "6 Month Plan",
     months: 6,
-    total: 1800,
+    total: 2394, // ₹399 × 6
     blurb: "Half a year — the usual choice after a trial.",
   },
   {
     id: "3m",
     name: "3 Month Plan",
     months: 3,
-    total: 1275,
+    total: 1497, // ₹499 × 3
     blurb: "A quarter at a time, if you want to be sure first.",
   },
   {
     id: "1m",
     name: "1 Month Plan",
     months: 1,
-    total: 1000,
+    total: 799,
     blurb: "Month to month. Stop whenever you like.",
   },
 ];
 
-/** ₹1,275 — Indian digit grouping, which is not what the default gives you. */
+/** ₹4,788 — Indian digit grouping, which is not what the default gives you. */
 export function inr(amount: number): string {
   return `₹${amount.toLocaleString("en-IN")}`;
 }

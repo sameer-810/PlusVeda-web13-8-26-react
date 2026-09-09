@@ -20,6 +20,7 @@ import { Showcase, type Panel } from "./Showcase";
 import { useReveal } from "./useReveal";
 import {
   cheapestPerMonth,
+  monthlyListPrice,
   contactHref,
   contactLabel,
   inr,
@@ -393,9 +394,12 @@ const COMPARISONS = [
 const FAQS = [
   {
     q: "What does it cost?",
+    /* Both figures derived, so this answer cannot outlive a price change. */
     a: `From ${inr(
       cheapestPerMonth,
-    )} a month on the 12-month plan, down from ₹1,000 a month if you buy a month at a time. Every plan is the same software — there is no cheaper version with features taken out, and nothing is charged per bill, per user or per medicine. The four plans are on this page.`,
+    )} a month on the 12-month plan, down from ${inr(
+      monthlyListPrice,
+    )} a month if you buy a month at a time. Every plan is the same software — there is no cheaper version with features taken out, and nothing is charged per bill, per user or per medicine. The four plans are on this page.`,
   },
   {
     q: "What happens when my plan runs out?",
