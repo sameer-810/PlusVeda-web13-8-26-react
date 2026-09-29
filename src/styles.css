@@ -207,7 +207,8 @@ img {
 }
 
 .brand img {
-  height: 26px;
+  /* Tall enough that the tagline under the wordmark stays legible. */
+  height: 42px;
   width: auto;
 }
 
@@ -217,6 +218,11 @@ img {
   margin-left: auto;
   font-size: 15px;
   color: var(--text-secondary);
+}
+
+.nav-links a,
+.nav-signin {
+  white-space: nowrap;
 }
 
 .nav-links a {
@@ -606,7 +612,7 @@ img {
 }
 
 .footer .brand img {
-  height: 30px;
+  height: 50px;
 }
 
 .footer-blurb {
@@ -713,6 +719,12 @@ img {
 
   .hero-sub {
     max-width: 60ch;
+  }
+
+  /* Six links plus the CTA only just fit between 960 and 1080px. */
+  .nav-links {
+    gap: 18px;
+    font-size: 14.5px;
   }
 }
 
@@ -1068,7 +1080,7 @@ img {
 
 /* The flipped wave sits at the TOP of the closing band. It is absolutely
    positioned, so it needs top padding to clear it (otherwise it draws over the
-   "Start free" button) and an explicit stacking order (a positioned element
+   "Get Started" button) and an explicit stacking order (a positioned element
    paints above in-flow content regardless of DOM order). */
 .close-cta {
   position: relative;

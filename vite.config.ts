@@ -57,6 +57,13 @@ function siteOrigin() {
 export default defineConfig({
   plugins: [react(), siteOrigin()],
   build: {
+    // Two pages: the landing, and the payment page served at /payment/.
+    rollupOptions: {
+      input: {
+        main: "index.html",
+        payment: "payment/index.html",
+      },
+    },
     // The page is one route with no code-splitting to do. A single chunk beats
     // a chunk graph here: fewer round trips before the hero paints.
     chunkSizeWarningLimit: 700,
