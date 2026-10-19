@@ -24,6 +24,7 @@ import {
   contactHref,
   contactLabel,
   inr,
+  paymentHref,
   planHref,
   planMath,
   plans,
@@ -37,7 +38,7 @@ import {
 function Brand({ className = "brand" }: { className?: string }) {
   return (
     <a className={className} href="#top" aria-label="Plusveda — home">
-      <img src="/brand/wordmark.png" alt="Plusveda" width={720} height={202} />
+      <img src="/brand/wordmark.png" alt="Plusveda" width={1000} height={299} />
     </a>
   );
 }
@@ -337,7 +338,8 @@ function Pricing() {
       <p className="plans-note">
         Each plan is paid once for the term, and you&apos;ll see the full
         breakdown before anything is agreed. Nothing renews on its own and no
-        card is stored. Prices are per medical store, in rupees.
+        card is stored. Prices are per medical store, in rupees.{" "}
+        <a href={paymentHref}>Ready to pay? Pay by UPI or bank transfer</a>
       </p>
 
       <div className="includes" data-reveal>
@@ -439,6 +441,7 @@ export default function App() {
             <a href="#what">What it does</a>
             <a href="#features">Features</a>
             <a href="#price">Pricing</a>
+            <a href={paymentHref}>Payment</a>
             <a href="#compare">Compare</a>
             <a href="#faq">Questions</a>
           </nav>
@@ -767,6 +770,7 @@ export default function App() {
                 <h4>Get started</h4>
                 <a href={signupHref}>Start free trial</a>
                 <a href={signinHref}>Sign in</a>
+                <a href={paymentHref}>Pay for a plan</a>
                 <a href={contactHref()}>{contactLabel}</a>
               </div>
               <div className="footer-col">

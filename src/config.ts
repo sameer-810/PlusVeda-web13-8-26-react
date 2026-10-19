@@ -17,7 +17,7 @@
 
 export const site = {
   /**
-   * Where every plan button, "Start free" and "Sign in" send people — the live
+   * Where every plan button, "Get Started" and "Sign in" send people — the live
    * app. Confirmed by the owner on 2026-09-05: the app is served from its own
    * subdomain now, not the Vercel address this used to hold.
    */
@@ -207,6 +207,39 @@ if (import.meta.env.DEV) {
         "  - SITE_ORIGIN (vite.config.ts) — check it matches the real domain",
     );
   }
+}
+
+/** Where the payment page takes money. Public by nature — printed on invoices. */
+export const payment = {
+  accountName: "FIVEM INFOTECH PRIVATE LIMITED",
+  accountNumber: "109805003079",
+  ifsc: "ICIC0001098",
+  upiId: "fiveminfotechprivatelimited.9594073820.ibz@icici",
+  /** How long a QR stays on screen. Enforced by the page only — see upiUri. */
+  qrValidMs: 5 * 60 * 1000,
+};
+
+export const paymentHref = "/payment/";
+
+/**
+ * The UPI deep link a QR encodes. `am` makes the payer's app open with the
+ * amount filled in; `tr` is a per-QR reference so payments can be matched.
+ *
+ * ponytail: UPI has no expiry the payer's app honours, so the 5-minute limit
+ * only hides the QR on this page. True expiry and auto-confirmation need a
+ * gateway's dynamic QR (ICICI Eazypay, Razorpay) and a backend.
+ */
+export function upiUri(plan: Plan, ref: string): string {
+  const q = new URLSearchParams({
+    pa: payment.upiId,
+    pn: payment.accountName,
+    am: plan.total.toFixed(2),
+    cu: "INR",
+    tn: `Plusveda ${plan.name}`,
+    tr: ref,
+  });
+  // Some UPI apps reject an encoded "@" in the VPA or "+" for spaces.
+  return `upi://pay?${q.toString().replace(/\+/g, "%20").replace(/%40/g, "@")}`;
 }
 
 export const signupHref = `${site.appUrl}/signup`;
