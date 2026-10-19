@@ -65,7 +65,7 @@ function StickyBar() {
   return (
     <div className={`sticky-bar${show ? " is-up" : ""}`} aria-hidden={!show}>
       <a className="btn btn-primary" href={signupHref} tabIndex={show ? 0 : -1}>
-        Start free
+        Start free trial
       </a>
       <a
         className="btn btn-ghost"
@@ -86,7 +86,7 @@ function Cta({ note, pill }: { note?: string; pill?: boolean }) {
           className={`btn btn-primary${pill ? " btn-pill" : ""}`}
           href={signupHref}
         >
-          Start free
+          Start 7-day free trial
           {/* Slides forward on hover, as the reference's does. Decorative, so
               it is hidden from screen readers — the link already says where it
               goes. */}
@@ -447,7 +447,7 @@ export default function App() {
               Sign in
             </a>
             <a className="btn btn-primary btn-sm btn-pill" href={signupHref}>
-              Start free
+              Start free trial
             </a>
           </div>
         </div>
@@ -765,7 +765,7 @@ export default function App() {
               </div>
               <div className="footer-col">
                 <h4>Get started</h4>
-                <a href={signupHref}>Start free</a>
+                <a href={signupHref}>Start free trial</a>
                 <a href={signinHref}>Sign in</a>
                 <a href={contactHref()}>{contactLabel}</a>
               </div>
