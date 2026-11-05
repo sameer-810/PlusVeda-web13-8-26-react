@@ -23,6 +23,7 @@ import {
   monthlyListPrice,
   contactHref,
   contactLabel,
+  quickEnquiryHref,
   inr,
   paymentHref,
   planHref,
@@ -79,7 +80,15 @@ function StickyBar() {
   );
 }
 
-function Cta({ note, pill }: { note?: string; pill?: boolean }) {
+function Cta({
+  note,
+  pill,
+  enquiry,
+}: {
+  note?: string;
+  pill?: boolean;
+  enquiry?: boolean;
+}) {
   return (
     <>
       <div className="hero-cta">
@@ -95,6 +104,16 @@ function Cta({ note, pill }: { note?: string; pill?: boolean }) {
             &rarr;
           </span>
         </a>
+        {enquiry ? (
+          <a
+            className={`btn btn-ghost${pill ? " btn-pill" : ""}`}
+            href={quickEnquiryHref}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Quick Enquiry
+          </a>
+        ) : null}
         <a
           className={`btn btn-ghost${pill ? " btn-pill" : ""}`}
           href={contactHref()}
@@ -497,6 +516,7 @@ export default function App() {
             </p>
             <Cta
               pill
+              enquiry
               note="Free to start · no card needed · browser, Android and the counter PC"
             />
           </div>
@@ -784,6 +804,10 @@ export default function App() {
           <div className="footer-bottom">
             <span>
               © {new Date().getFullYear()} {site.company}. All rights reserved.
+            </span>
+            <span>
+              Designed &amp; developed by{" "}
+              <a href="https://portfolio.fiveminfotech.com/" target="_blank" rel="noopener">FIVEM INFOTECH</a>
             </span>
             <span>
               Plusveda records what your pharmacy bought and sold. It does not
