@@ -186,6 +186,11 @@ export function planHref(plan: Plan): string {
   return `${signupHref}?plan=${encodeURIComponent(plan.id)}`;
 }
 
+/** Hero "Quick Enquiry" — always WhatsApp, independent of whatsappNumber above. */
+export const quickEnquiryHref = `https://wa.me/918652107315?text=${encodeURIComponent(
+  "Hi, I would like to know more about your courses and programs.",
+)}`;
+
 /** So the button can honestly say what it will do. */
 export const contactLabel = waDigits
   ? "Talk to us on WhatsApp"
