@@ -7,11 +7,10 @@
 /* ============================================================================
    TODO — OWNER: FILL THESE IN BEFORE THE PAGE GOES LIVE
 
-     1. whatsappNumber — the sales WhatsApp number.  ⚠ costs leads while empty
-     2. playStoreUrl   — the Play Store listing, once the app is published
+     1. playStoreUrl   — the Play Store listing, once the app is published
 
-   Neither is a dead link while empty; each degrades to something that still
-   works, which is why they went unnoticed. SITE_ORIGIN lives in vite.config.ts,
+   It is not a dead link while empty; the badge is hidden, which is why it
+   goes unnoticed. SITE_ORIGIN lives in vite.config.ts,
    not here, because index.html needs it at build time.
    ========================================================================= */
 
@@ -24,13 +23,13 @@ export const site = {
   appUrl: "https://portal.plusveda.online",
 
   /**
-   * ⚠ TODO(owner) — the sales WhatsApp number. Digits only, country code
-   * first: "919876543210". Anything else pasted in is stripped to digits.
+   * The sales WhatsApp number, set by the owner on 2026-11-04. Digits only,
+   * country code first. Anything else pasted in is stripped to digits.
    *
-   * While empty, every "Talk to us" button falls back to a mailto: link —
+   * If emptied, every "Talk to us" button falls back to a mailto: link —
    * a much weaker channel for Indian medical stores.
    */
-  whatsappNumber: "",
+  whatsappNumber: "918652107315",
 
   /** Pre-filled so the first message tells you which page it came from. */
   whatsappMessage:
